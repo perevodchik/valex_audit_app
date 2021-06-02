@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class User {
   String? id;
   String? name;
@@ -12,6 +14,20 @@ class User {
       company: data["company"] ?? "",
       rang: data["rang"] ?? ""
   );
+
+  factory User.fromShared(SharedPreferences s) => User(
+      id: s.getString("user"),
+      name: s.getString("name"),
+      company: s.getString("company"),
+      rang: s.getString("rang")
+  );
+
+  void toShared(SharedPreferences s) {
+    s.setString("user", id ?? "");
+    s.setString("name", name ?? "");
+    s.setString("company", company ?? "");
+    s.setString("rang", rang ?? "");
+  }
 
   Map<String, dynamic> toJson() => {
     "name": name,

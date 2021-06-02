@@ -31,7 +31,7 @@ class _State extends State<AuditItem> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(dateFormat.format(DateTime.tryParse(widget.audit.date) ?? DateTime.now()), style: styleBoldP14),
+                  Text(dateFormat.format(widget.audit.date), style: styleBoldP14),
                   if(!widget.audit.isSaved)
                     Row(
                       children: [

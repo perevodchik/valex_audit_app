@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../All.dart';
 
@@ -39,14 +40,14 @@ class ModalImageSourcePicker extends StatelessWidget {
                                 Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      Text("pick_image", style: styleBoldP34.copyWith(color: blueDark, fontFamily: "Arial")),
-                                      Text("select_image_source", textAlign: TextAlign.center, style: styleNormalP14.copyWith(fontFamily: "Arial")).marginSymmetricWidget(horizontal: defaultMargin)
+                                      Text("modal_pick_image".tr(), style: styleBoldP34.copyWith(color: blueDark, fontFamily: "Arial")),
+                                      Text("modal_select_image_source".tr(), textAlign: TextAlign.center, style: styleNormalP14.copyWith(fontFamily: "Arial")).marginSymmetricWidget(horizontal: defaultMargin)
                                     ]
                                 ).marginWidget(bottom: margin5Y).expanded(),
                                 Column(
                                   children: [
                                     AppTextButton(
-                                      Text("from_camera", style: styleBoldP14.copyWith(color: blueAccent)),
+                                      Text("modal_from_camera".tr(), style: styleBoldP14.copyWith(color: blueAccent)),
                                       onPressed: () async {
                                         var r = await selectImage(source: ImageSource.camera);
                                         if(r != null)
@@ -54,7 +55,7 @@ class ModalImageSourcePicker extends StatelessWidget {
                                       }
                                     ).width(width),
                                     AppTextButton(
-                                      Text("from_gallery", style: styleBoldP14.copyWith(color: blueAccent)),
+                                      Text("modal_from_gallery".tr(), style: styleBoldP14.copyWith(color: blueAccent)),
                                         onPressed: () async {
                                           var r = await selectImage(source: ImageSource.gallery);
                                           if(r != null)

@@ -18,23 +18,21 @@ class _State extends State<SplashScreen> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       Global.build();
-      var userId = (await SharedPreferences.getInstance()).getString("user");
-      print("userId: [ $userId ]");
+
       NetworkRepository.subscribeToChanges();
       var state = await Connectivity().checkConnectivity();
       await NetworkRepository.refreshNetworkStatus();
       BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!).set(state);
       if(state == ConnectivityResult.none)
         await FirebaseFirestore.instance.disableNetwork();
-      if(userId != null && userId.isNotEmpty) {
-        var user = await UserRepository.getUserById(userId);
-        print("user: [ $user ]");
-        if(user != null) {
-          goToNamed(Routes.main, {}, isRemovePreviously: true);
-          return;
-        }
+
+      var user = User.fromShared(await SharedPreferences.getInstance());
+      if(user.id == null || user.id!.isEmpty) {
+        goToNamed(Routes.signIn, {}, isRemovePreviously: true);
+      } else {
+        BlocProvider.of<UserCubit>(context).set(user);
+        goToNamed(Routes.main, {}, isRemovePreviously: true);
       }
-      goToNamed(Routes.signIn, {}, isRemovePreviously: true);
     });
   }
 

@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../All.dart';
 
@@ -92,7 +93,7 @@ class _State extends State<EditClientScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text("edit_client"),
+            title: Text("client_edit".tr()),
             backgroundColor: blueAccent,
             elevation: 0,
             brightness: Brightness.dark
@@ -111,15 +112,15 @@ class _State extends State<EditClientScreen> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("main_info", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY * 1.5),
+                              Text("main_info".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY * 1.5),
                               Wrap(
                                   runSpacing: 10,
                                   children: [
-                                    CustomRoundedTextField(name, hint: "name", helperText: "name"),
-                                    CustomRoundedTextField(address, hint: "address", helperText: "address"),
-                                    CustomRoundedTextField(inventory, hint: "inventory", helperText: "inventory"),
-                                    CustomRoundedTextField(countPC, hint: "countPC", helperText: "countPC"),
-                                    CustomRoundedTextField(countCow, hint: "countCow", helperText: "countCow")
+                                    CustomRoundedTextField(name, hint: "client_name".tr(), helperText: "client_name".tr()),
+                                    CustomRoundedTextField(address, hint: "client_address".tr(), helperText: "client_address".tr()),
+                                    CustomRoundedTextField(inventory, hint: "client_inventory".tr(), helperText: "client_inventory".tr()),
+                                    CustomRoundedTextField(countPC, hint: "client_countPC".tr(), helperText: "client_countPC".tr()),
+                                    CustomRoundedTextField(countCow, hint: "client_countCow".tr(), helperText: "client_countCow".tr())
                                   ]
                               ).marginSymmetricWidget(horizontal: margin5X)
                             ]
@@ -130,7 +131,7 @@ class _State extends State<EditClientScreen> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("contact_peoples", style: styleBoldP20),
+                                    Text("client_contact_peoples".tr(), style: styleBoldP20),
                                     Icon(Icons.add_circle_outline_rounded, color: blueAccent).onClick(() =>
                                         setState(() => contactPeoples.add(ContactPeople.empty()))
                                     )
@@ -162,7 +163,7 @@ class _State extends State<EditClientScreen> {
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("inventory", style: styleBoldP20),
+                                    Text("client_inventory".tr(), style: styleBoldP20),
                                     Icon(Icons.add_circle_outline_rounded, color: blueAccent).onClick(() =>
                                         setState(() => inventoryItems.add(Inventory.empty()))
                                     )
@@ -191,12 +192,12 @@ class _State extends State<EditClientScreen> {
                   Row(
                       children: [
                         (currentPage > 0 ? AppTextButton(
-                            Text("back", style: styleBoldP14.copyWith(color: blueAccent)),
+                            Text("back".tr(), style: styleBoldP14.copyWith(color: blueAccent)),
                             onPressed: () => page?.previousPage(duration: Duration(milliseconds: 350), curve: Curves.easeIn)
                         ) : Container()).expanded(),
                         Container(width: 20),
                         AppElevatedButton(
-                            Text(currentPage < 2 ? "next" : "save", style: styleBoldP14.copyWith(color: Colors.white)),
+                            Text(currentPage < 2 ? "next".tr() : "save".tr(), style: styleBoldP14.copyWith(color: Colors.white)),
                             onPressed: () async {
                               if(currentPage == 2) {
                                 if(isLoading) return;
@@ -214,6 +215,7 @@ class _State extends State<EditClientScreen> {
                                   int.tryParse(countPC?.text ?? "") ?? 0,
                                   int.tryParse(countCow?.text ?? "") ?? 0,
                                   DateTime.now().millisecondsSinceEpoch,
+                                  client?.lastAudit,
                                   contactPeoples,
                                   inventoryItems,
                                   <Potential>[],

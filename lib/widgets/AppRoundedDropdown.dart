@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AppRoundedDropdown extends StatefulWidget {
   final List<String> items;
@@ -26,12 +27,23 @@ class _State extends State<AppRoundedDropdown> {
           style: styleBoldP14.copyWith(color: blueDark, fontFamily: "Arial"),
           underline: Container(),
           icon: Container(),
-          hint: Text("select_value"),
+          hint: Text("dropdown_select_value".tr()),
           isDense: true,
+          isExpanded: true,
+
+          // selectedItemBuilder: (context) {
+          //   return [
+          //     Text("123")
+          //   ];
+          // },
+
           items: widget.items.map((String value) {
             return new DropdownMenuItem<String>(
                 value: value,
-                child: new Text(value)
+                child: Container(
+                  // margin: EdgeInsets.symmetric(vertical: 5),
+                  child: Text(value)
+                )
             );
           }).toList(),
           value: widget.selected.isEmpty ? null : widget.selected,

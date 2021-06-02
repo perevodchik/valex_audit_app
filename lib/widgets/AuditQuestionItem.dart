@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:valex_agro_audit_app/All.dart';
 import 'package:valex_agro_audit_app/widgets/modals/ModalCarousel.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AuditQuestionItem extends StatefulWidget {
   final ClientAuditQuestion data;
@@ -33,18 +34,18 @@ class _State extends State<AuditQuestionItem> {
     comment = TextEditingController(text: widget.data.comment);
 
     var v = int.tryParse(widget.data.firstRate.toString()) ?? 1;
-    if(v == 1)
+    if(v == 3)
       leading = SvgPicture.asset("assets/icons/warning.svg", height: 30, width: 30);
     else if(v == 2)
       leading = SvgPicture.asset("assets/icons/alert.svg", height: 30, width: 30);
-    else if(v == 3)
+    else if(v == 1)
       leading = SvgPicture.asset("assets/icons/perfect.svg", height: 30, width: 30);
     else leading = Container(height: 30, width: 30);
 
     questions.add("");
-    questions.add("question_${widget.data.question}_0");
-    questions.add("question_${widget.data.question}_1");
-    questions.add("question_${widget.data.question}_2");
+    questions.add("${widget.data.question}_0".tr());
+    questions.add("${widget.data.question}_1".tr());
+    questions.add("${widget.data.question}_2".tr());
     currentQuestion = questions.first;
     super.initState();
   }
@@ -63,9 +64,8 @@ class _State extends State<AuditQuestionItem> {
   Widget build(BuildContext context) {
     widget.data.photosSrc?.removeWhere((s) => s.isEmpty);
     currentQuestion = widget.data.rateParam;
-    // if(widget.data.photosSrc?.isEmpty ?? false)
-      print(File("/data/user/0/com.perevodchik.valex_agro_audit_app/app_flutter/m8r44gt2KB9R16Ho2bnO_07u951rN7tB4NNEy2gr1_zhorskist_0.png").existsSync());
     return Container(
+        key: Key("audit_question_item_${widget.data.id}"),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -74,21 +74,21 @@ class _State extends State<AuditQuestionItem> {
         child: Wrap(
             runSpacing: 10,
             children: [
-              Text(widget.data.question, style: styleBoldP16.copyWith(color: blueAccent)),
+              Text(widget.data.question.tr(), style: styleBoldP16.copyWith(color: blueAccent)),
               if(widget.data.withRate)
               Row(
                 children: [
-                  CustomRoundedTextField(firstRate, hint: "firstRate", helperText: "firstRate",
+                  CustomRoundedTextField(firstRate, hint: "audit_question_first_rate".tr(), helperText: "audit_question_first_rate".tr(),
                       formatters: [
                         FilteringTextInputFormatter(RegExp(r"^[1-3]$"), allow: true, replacementString: "")
                       ],
                       onChanged: (r) {
                         var v = int.tryParse(r) ?? 0;
-                        if(v == 1)
+                        if(v == 3)
                           leading = SvgPicture.asset("assets/icons/warning.svg", height: 30, width: 30);
                         else if(v == 2 || v == 0)
                           leading = SvgPicture.asset("assets/icons/alert.svg", height: 30, width: 30);
-                        else if(v == 3)
+                        else if(v == 1)
                           leading = SvgPicture.asset("assets/icons/perfect.svg", height: 30, width: 30);
                         else leading = Container(height: 30, width: 30);
                         setState(() {});
@@ -112,7 +112,7 @@ class _State extends State<AuditQuestionItem> {
                       });
                     })
               ).width(width),
-              CustomRoundedTextField(comment, hint: "comment", helperText: "comment", maxLines: 3,
+              CustomRoundedTextField(comment, hint: "audit_question_first_comment".tr(), helperText: "audit_question_first_comment".tr(), maxLines: 3,
                   onChanged: (c) => widget.data.comment = c, isEnable: widget.isEditable).center(),
               Row(
                 children: [
@@ -121,8 +121,10 @@ class _State extends State<AuditQuestionItem> {
                       context: context,
                       builder: (_) => ModalImageSourcePicker()
                     );
-                    if(r != null)
+                    if(r != null) {
+                      widget.data.photos?.clear();
                       setState(() => widget.data.photos?.add(r));
+                    }
                   }),
                   if(!widget.isEditable)
                     if(widget.isCached)

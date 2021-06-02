@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AuditListClientScreen extends StatefulWidget {
   final Map<String, dynamic> args;
@@ -38,9 +39,7 @@ class _State extends State<AuditListClientScreen> {
   Future<void> load() async {
     var audits = <ClientAudit> [];
     var networkAudits = await AuditRepository.getAudits(client!.id);
-    print("from network $networkAudits");
     var localAudits = await LocalStorage().getAudits(client!.id);
-    print("from local $localAudits");
     audits.addAll(localAudits);
     audits.addAll(networkAudits);
     setState(() => client?.audits = audits);
@@ -48,11 +47,10 @@ class _State extends State<AuditListClientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // goToNamed(Routes.signIn, {});
     return Scaffold(
       appBar: AppBar(
         backgroundColor: blueAccent,
-        title: Text("audits"),
+        title: Text("audits".tr()),
         centerTitle: true,
         elevation: 0,
         brightness: Brightness.dark
@@ -88,7 +86,7 @@ class _State extends State<AuditListClientScreen> {
                 )
             ).marginWidget(top: blockY).expanded()
           ),
-          AppTextButton(Text("new_audit", style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
+          AppTextButton(Text("start_audit".tr(), style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
             print(client);
             await goToNamed(Routes.auditClient, {
               "client": ClientPreview.fromClient(client!)

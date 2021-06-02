@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ReviewPageScreen extends StatefulWidget {
   final Map<String, dynamic>? args;
@@ -78,7 +79,7 @@ class _State extends State<ReviewPageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text("client_review"),
+            title: Text("review_client".tr()),
             elevation: 0,
             backgroundColor: blueAccent,
             brightness: Brightness.dark
@@ -93,27 +94,27 @@ class _State extends State<ReviewPageScreen> {
                         children: [
                           Text(client?.name ?? "", style: styleBoldP20.copyWith(color: blueDark)).marginWidget(bottom: blockY),
                           Text(review?.user ?? "", style: styleBoldP14.copyWith(color: blueDark)).marginWidget(bottom: blockY),
-                          Text("review_for_${DateFormat("dd.MM.yy").format(reviewDate ?? DateTime.now())}",
+                          Text("review_for".tr(args: [DateFormat("dd.MM.yy").format(reviewDate ?? DateTime.now())]),
                               style: styleBoldP12)
                         ]
                     ).marginSymmetricWidget(vertical: margin5Y / 2, horizontal: margin5X),
-                    Text("general", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X).marginWidget(bottom: blockY * 1.5),
+                    Text("general".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X).marginWidget(bottom: blockY * 1.5),
                     Wrap(
                         runSpacing: blockY,
                         children: [
-                          CustomRoundedTextField(workedCow, hint: "workedCow", helperText: "workedCow", isEnable: false),
-                          CustomRoundedTextField(cowAvgByDay, hint: "cowAvgByDay", helperText: "cowAvgByDay", isEnable: false),
-                          CustomRoundedTextField(milkByDay, hint: "milkByDay", helperText: "milkByDay", isEnable: false),
-                          CustomRoundedTextField(tovarnistMilk, hint: "tovarnistMilk", helperText: "tovarnistMilk", isEnable: false),
-                          CustomRoundedTextField(milkFat, hint: "milkFat", helperText: "milkFat", isEnable: false),
-                          CustomRoundedTextField(milkProtein, hint: "milkProtein", helperText: "milkProtein", isEnable: false),
-                          CustomRoundedTextField(zakupMilkPrice, hint: "zakupMilkPrice", helperText: "zakupMilkPrice", isEnable: false),
-                          CustomRoundedTextField(invalidCow, hint: "invalidCow", helperText: "invalidCow", isEnable: false),
-                          CustomRoundedTextField(mastit, hint: "mastit", helperText: "mastit", isEnable: false),
-                          CustomRoundedTextField(kopyta, hint: "kopyta", helperText: "kopyta", isEnable: false),
-                          CustomRoundedTextField(endometryt, hint: "endometryt", helperText: "endometryt", isEnable: false),
-                          CustomRoundedTextField(bacteryZabrudMilk, hint: "bacteryZabrudMilk", helperText: "bacteryZabrudMilk", isEnable: false),
-                          CustomRoundedTextField(bacterySomatMilk, hint: "bacterySomatMilk", helperText: "bacterySomatMilk", isEnable: false)
+                          CustomRoundedTextField(workedCow, hint: "review_workedCow".tr(), helperText: "review_workedCow".tr(), isEnable: false),
+                          CustomRoundedTextField(cowAvgByDay, hint: "review_cowAvgByDay".tr().tr(), helperText: "review_cowAvgByDay".tr(), isEnable: false),
+                          CustomRoundedTextField(milkByDay, hint: "review_milkByDay".tr(), helperText: "review_milkByDay".tr(), isEnable: false),
+                          CustomRoundedTextField(tovarnistMilk, hint: "review_tovarnistMilk".tr(), helperText: "review_tovarnistMilk".tr(), isEnable: false),
+                          CustomRoundedTextField(milkFat, hint: "review_milkFat".tr(), helperText: "review_milkFat".tr(), isEnable: false),
+                          CustomRoundedTextField(milkProtein, hint: "review_milkProtein".tr(), helperText: "review_milkProtein".tr(), isEnable: false),
+                          CustomRoundedTextField(zakupMilkPrice, hint: "review_zakupMilkPrice".tr(), helperText: "review_zakupMilkPrice".tr(), isEnable: false),
+                          CustomRoundedTextField(invalidCow, hint: "review_invalidCow".tr(), helperText: "review_invalidCow".tr(), isEnable: false),
+                          CustomRoundedTextField(mastit, hint: "review_mastit".tr(), helperText: "review_mastit".tr(), isEnable: false),
+                          CustomRoundedTextField(kopyta, hint: "review_kopyta".tr(), helperText: "review_kopyta".tr(), isEnable: false),
+                          CustomRoundedTextField(endometryt, hint: "review_endometryt".tr(), helperText: "review_endometryt".tr(), isEnable: false),
+                          CustomRoundedTextField(bacteryZabrudMilk, hint: "review_bacteryZabrudMilk".tr(), helperText: "review_bacteryZabrudMilk".tr(), isEnable: false),
+                          CustomRoundedTextField(bacterySomatMilk, hint: "review_bacterySomatMilk".tr(), helperText: "review_bacterySomatMilk".tr(), isEnable: false)
                         ]
                     ).marginSymmetricWidget(horizontal: margin5X),
                     Wrap(
@@ -122,21 +123,21 @@ class _State extends State<ReviewPageScreen> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("metaSell", style: styleBoldP14),
+                                Text("review_metaSell".tr(), style: styleBoldP14),
                                 Switch(value: review?.metaSell ?? false, onChanged: null, inactiveTrackColor: blueAccent.withOpacity(.3), inactiveThumbColor: blueDark)
                               ]
                           ),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("metaProduction", style: styleBoldP14),
+                                Text("review_metaProduction".tr(), style: styleBoldP14),
                                 Switch(value: review?.metaProduction ?? false, onChanged: null, inactiveTrackColor: blueAccent.withOpacity(.3), inactiveThumbColor: blueDark)
                               ]
                           ),
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("getQuestion", style: styleBoldP14),
+                                Text("review_getQuestion".tr(), style: styleBoldP14),
                                 Switch(value: review?.getQuestion ?? false, onChanged: null, inactiveTrackColor: blueAccent.withOpacity(.3), inactiveThumbColor: blueDark)
                               ]
                           )
@@ -145,7 +146,7 @@ class _State extends State<ReviewPageScreen> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("questions", style: styleBoldP20),
+                          Text("review_questions".tr(), style: styleBoldP20),
                         ]
                     ).marginSymmetricWidget(horizontal: margin5X).marginWidget(bottom: blockY * 1.5),
                     ListView.separated(

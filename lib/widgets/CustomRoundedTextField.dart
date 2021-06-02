@@ -64,9 +64,9 @@ class CustomRoundedTextField extends StatelessWidget {
             hintText: hint,
             hintStyle: style ?? styleNormalP12.copyWith(color: silver, fontFamily: "Arial"),
             prefixIcon: leading != null ? Container(
-              padding: EdgeInsets.all(10),
-              constraints: BoxConstraints(minWidth: 15, maxWidth: 15, maxHeight: 15, minHeight: 15),
-              child: leading
+                padding: EdgeInsets.all(10),
+                constraints: BoxConstraints(minWidth: 15, maxWidth: 15, maxHeight: 15, minHeight: 15),
+                child: leading
             ) : null,
             suffixIcon: trailing,
             focusedBorder: OutlineInputBorder(
@@ -88,10 +88,10 @@ class CustomRoundedTextField extends StatelessWidget {
                 )
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(
-                  color: borderColor ?? greyMedium
-              )
+                borderRadius: BorderRadius.circular(borderRadius),
+                borderSide: BorderSide(
+                    color: borderColor ?? greyMedium
+                )
             )
         )
     );

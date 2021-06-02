@@ -10,6 +10,7 @@ class ReviewRepository {
         .collection(tableClients)
         .doc(clientId)
         .collection(tableReviews)
+        .orderBy("date", descending: true)
         .get();
     for(var dataSet in reviews.docs) {
       try {

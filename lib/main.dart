@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,17 +11,34 @@ import 'package:valex_agro_audit_app/screens/EditClientScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseFirestore.instance.settings = Settings(
-    persistenceEnabled: true
-  );
+  FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
   await AppDatabase().init();
-  runApp(MyApp());
+  runApp(
+    EasyLocalization(
+        supportedLocales: [Locale("uk", "UA")],
+        path: "assets/translations",
+        fallbackLocale: Locale("uk", "UA"),
+        child: MyApp()
+    )
+  );
+}
+
+Future<void> up() async {
+
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print(context.supportedLocales);
+    print(context.localizationDelegates);
+    for(var d in context.localizationDelegates) {
+      print("${d.type} => ${d.isSupported(Locale('uk', 'UA'))}");
+    }
+
+
     return MultiBlocProvider(
         providers: [
           BlocProvider<UserCubit>(create: (BuildContext context) => UserCubit()),
@@ -29,11 +47,13 @@ class MyApp extends StatelessWidget {
           BlocProvider<SyncCubit>(create: (BuildContext context) => SyncCubit())
         ],
         child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
             navigatorKey: navigatorKey,
             title: 'Valex Agro Audit App',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: ThemeData(primarySwatch: Colors.blue,),
             initialRoute: Routes.splash,
             onGenerateRoute: (routerSettings) {
               switch(routerSettings.name) {

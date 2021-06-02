@@ -7,7 +7,7 @@ class ClientAudit {
   String clientId;
   String user;
   String place;
-  String date;
+  DateTime date;
   String address;
   bool isSaved;
   List<AuditData> data;
@@ -80,7 +80,43 @@ class ClientAudit {
         data["clientId"] ?? "",
         data["user"] ?? "",
         data["place"] ?? "",
-        data["date"],
+        // data["date"],
+        DateTime.fromMillisecondsSinceEpoch(data["date"].millisecondsSinceEpoch),
+        data["address"],
+        data["isSaved"] ?? false,
+        auditData,
+        questions
+    );
+  }
+
+  factory ClientAudit.fromLocalJson(Map<String, dynamic> data) {
+    var auditData = <AuditData> [];
+    var questions = <String, Map<String, List<ClientAuditQuestion>>> {};
+    if(data.containsKey("data")) {
+      for(var dataSet in data["data"])
+        auditData.add(AuditData.fromJson(dataSet));
+    }
+
+    if(data.containsKey("auditQuestions")) {
+      for(var e in data["auditQuestions"].entries) {
+        if(questions[e.key] == null)
+          questions[e.key] = <String, List<ClientAuditQuestion>> {};
+        for(var q in e.value) {
+          var question = ClientAuditQuestion.fromJson(q);
+          if(questions[e.key]![question.questionTitle] == null) {
+            print(question.questionTitle);
+            questions[e.key]![question.questionTitle] = <ClientAuditQuestion>[];
+          }
+          questions[e.key]![question.questionTitle]?.add(question);
+        }
+      }
+    }
+    return ClientAudit(
+        data["id"] ?? "",
+        data["clientId"] ?? "",
+        data["user"] ?? "",
+        data["place"] ?? "",
+        DateTime.tryParse(data["date"]) ?? DateTime.now(),
         data["address"],
         data["isSaved"] ?? false,
         auditData,

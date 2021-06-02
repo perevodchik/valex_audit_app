@@ -8,6 +8,7 @@ class ClientFull {
   int countPC;
   int countCow;
   int createdAt;
+  DateTime? lastAudit;
   List<ContactPeople> contactPeoples;
   List<Inventory> clientInventory;
   List<Potential> clientPotential;
@@ -24,6 +25,7 @@ class ClientFull {
       this.countPC,
       this.countCow,
       this.createdAt,
+      this.lastAudit,
       this.contactPeoples,
       this.clientInventory,
       this.clientPotential,
@@ -37,6 +39,7 @@ class ClientFull {
       data["countPC"] ?? data["count_pc"] ?? 0,
       data["countCow"] ?? data["count_cow"] ?? 0,
       data["createdAt"] ?? data["created_at"] ?? 0,
+      data["lastAudit"] != null ? DateTime.fromMillisecondsSinceEpoch(data["lastAudit"].millisecondsSinceEpoch) : null,
       data["contactPeoples"] == null ? [] : data["contactPeoples"].map<ContactPeople>((dataSet) => ContactPeople.fromJson(dataSet)).toList(),
       data["clientInventory"] == null ? [] : data["clientInventory"].map<Inventory>((dataSet) => Inventory.fromJson(dataSet)).toList(),
       data["clientPotential"] == null ? [] : data["clientPotential"].map<Potential>((dataSet) => Potential.fromJson(dataSet)).toList(),
@@ -55,7 +58,7 @@ class ClientFull {
     "clientPotential": clientPotential.map<Map<String, dynamic>>((p) => p.toJson()).toList()
   };
 
-  ClientFull copyWith({id, name, address, inventory, countPC, countCow, createdAt, contactPeoples, clientInventory, clientPotential, audits}) => ClientFull(
+  ClientFull copyWith({id, name, address, inventory, countPC, countCow, createdAt, lastAudit, contactPeoples, clientInventory, clientPotential, audits}) => ClientFull(
       id ?? this.id,
       name ?? this.name,
       address ?? this.address,
@@ -63,6 +66,7 @@ class ClientFull {
       countPC ?? this.countPC,
       countCow ?? this.countCow,
       createdAt ?? this.createdAt,
+      lastAudit ?? this.lastAudit,
       contactPeoples ?? this.contactPeoples,
       clientInventory ?? this.clientInventory,
       clientPotential ?? this.clientPotential,
@@ -71,6 +75,6 @@ class ClientFull {
 
   @override
   String toString() {
-    return "{id: $id, name: $name, address: $address, inventory: $inventory, countPC: $countPC, countCow: $countCow, createdAt: $createdAt, contactPeoples: $contactPeoples, clientInventory: $clientInventory, clientPotential: $clientPotential}";
+    return "{id: $id, name: $name, address: $address, inventory: $inventory, countPC: $countPC, countCow: $countCow, createdAt: $createdAt, lastAudit: $lastAudit, contactPeoples: $contactPeoples, clientInventory: $clientInventory, clientPotential: $clientPotential}";
   }
 }

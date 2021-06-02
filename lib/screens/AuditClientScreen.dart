@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../All.dart';
 
@@ -24,108 +26,478 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
   bool isLoading = false;
   int currentPage = 0;
   ClientAudit? audit;
-  TabController? tab;
   int selectedAudit0 = 0;
   int selectedAudit1 = 0;
   int selectedAudit2 = 0;
   final DateFormat dateFormat = DateFormat('hh:mm dd.MM.yyyy');
+  List<Widget> auditDataWidgets = [];
 
   @override
   void didChangeDependencies() {
     args = widget.args;
     clientPreview = args["client"]!;
 
-    audit = ClientAudit("",
-    clientPreview!.id,
-    BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "",
-    "place",
-    DateTime.now().toString(),
-    clientPreview!.address!,
-    false,
-    <AuditData>[], {
-      "audit_0": {
-        "vacuum_system": [
-          ClientAuditQuestion(question: "vacuum_nasos", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "vacuum_glushnyk", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "vacuum_reciever", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "vacuumetr", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "vacuum_reguljator", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "sanitarna_camera", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "milk_system": [
-          ClientAuditQuestion(question: "molokopryjmach", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "milk_nasos", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "milk_filter", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "molokoprovid_vid", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "molokoprovody_do", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "ohlad_system": [
-          ClientAuditQuestion(question: "tanker", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "compresorny_agregaty", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "promyvka_na_jakosty_zberigannja", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "doilny_aparaty": [
-          ClientAuditQuestion(question: "colector", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "stakany", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "polsatory", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "diykova_guma", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "large_molk_shlangy", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "pulsator", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "vykachka_moloka": [
-          ClientAuditQuestion(question: "milk_nasos", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "shlang_vykachly", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "system_promyvky": [
-          ClientAuditQuestion(question: "bak_avtomata_promyvky", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "gnizda_promyvky", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ]
-      },
-      "audit_1": {
-        "audit_1": [
-          ClientAuditQuestion(question: "zahalni", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "prepare", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "pidcluchennhja", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "doinnja", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "znjattja", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "pisljadijna", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-        ]
-      },
-      "audit_2": {
-        "jakist_vody": [
-          ClientAuditQuestion(question: "zhorskist", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ],
-        "wash_zasoby": [
-          ClientAuditQuestion(question: "mijuchi_zasoby", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", withRate: false, withSelector: false, photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "luzhi", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", withRate: false, withSelector: false, photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "kislotni", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", withRate: false, withSelector: false, photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "upakovka", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "vyrobnik", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-        ],
-        "promyvka_systemy": [
-          ClientAuditQuestion(question: "first_opoliskuvannja", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "ph_rob_rozchynu", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "circul_promyvka_water", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "gnizda_promyvky_temp", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "gnizda_promyvky_hour", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "gnizda_promyvky_probky", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: []),
-          ClientAuditQuestion(question: "gnizda_promyvky_fact", auditId: "", comment: "", rateParam: "", firstRate: "1", secondRate: "", photos: [], photosSrc: [])
-        ]
-      }
-    });
+    if(audit == null) {
+      audit = ClientAudit(
+          "",
+          clientPreview!.id,
+          BlocProvider
+              .of<UserCubit>(navigatorKey.currentContext!)
+              .state
+              ?.name ?? "",
+          "place",
+          DateTime.now(),
+          clientPreview!.address!,
+          false,
+          <AuditData>[],
+          {
+            "audit_0": {
+              "audit_title_vacuum_system": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vacuum_nasos",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vacuum_glushnyk",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vacuum_reciever",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vacuumetr",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vacuum_reguljator",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_sanitarna_camera",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_milk_system": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_molokopryjmach",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_milk_nasos",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_milk_filter",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_molokoprovid_vid",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_molokoprovody_do",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_ohlad_system": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_tanker",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_compresorny_agregaty",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_promyvka_na_jakosty_zberigannja",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_doilny_aparaty": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_colector",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_stakany",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_polsatory",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_diykova_guma",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_large_molk_shlangy",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_pulsator",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_vykachka_moloka": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_milk_nasos",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_shlang_vykachly",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_system_promyvky": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_bak_avtomata_promyvky",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_gnizda_promyvky",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ]
+            },
+            "audit_1": {
+              "audit_title_audit_1": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_zahalni",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_prepare",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_pidcluchennhja",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_doinnja",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_znjattja",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_pisljadijna",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+              ]
+            },
+            "audit_2": {
+              "audit_title_jakist_vody": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_zhorskist",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ],
+              "audit_title_wash_zasoby": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_mijuchi_zasoby",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    withRate: false,
+                    withSelector: false,
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_luzhi",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    withRate: false,
+                    withSelector: false,
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_kislotni",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    withRate: false,
+                    withSelector: false,
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_upakovka",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_vyrobnik",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+              ],
+              "audit_title_promyvka_systemy": [
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_first_opoliskuvannja",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_ph_rob_rozchynu",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_circul_promyvka_water",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_gnizda_promyvky_temp",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_gnizda_promyvky_hour",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_gnizda_promyvky_probky",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: []),
+                ClientAuditQuestion(id: generate(12),
+                    question: "audit_question_gnizda_promyvky_fact",
+                    auditId: "",
+                    comment: "",
+                    rateParam: "",
+                    firstRate: "1",
+                    secondRate: "",
+                    photos: [],
+                    photosSrc: [])
+              ]
+            }
+          });
 
-    audit?.data.add(AuditData(title: "address", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "ustanovka", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "place_count", value: "2", additional: ""));
-    audit?.data.add(AuditData(title: "cow_count", value: "1", additional: ""));
-    audit?.data.add(AuditData(title: "milk_by_day", value: "12", additional: ""));
-    audit?.data.add(AuditData(title: "milk", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "milk_bakterii", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "milk_somat", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "milk_fat", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "milk_protein", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "milk_price", value: "", additional: ""));
-    audit?.data.add(AuditData(title: "inner_number", value: "", additional: ""));
+      audit?.data.add(AuditData(title: "audit_address", value: audit?.address ?? "", additional: ""));
+      audit?.data.add(AuditData(title: "audit_ustanovka", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_place_count", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_cow_count", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_milk_by_day", value: "", additional: ""));
+      audit?.data.add(AuditData(title: "audit_milk", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_milk_bakterii", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_milk_somat", value: "", additional: ""));
+      audit?.data.add(AuditData(title: "audit_milk_fat", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_milk_protein", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_milk_price", value: "", additional: ""));
+      audit?.data.add(
+          AuditData(title: "audit_inner_number", value: "", additional: ""));
+
+      auditDataWidgets.addAll((audit?.data ?? [])
+          .map<Widget>((data) =>
+          AuditDataItem(data).marginSymmetricWidget(horizontal: margin5X))
+          .toList());
+    }
 
     super.didChangeDependencies();
   }
@@ -136,7 +508,6 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
     firstAuditPage = PageController();
     secondAuditPage = PageController();
     thirdAuditPage = PageController();
-    tab = TabController(length: audit?.auditQuestions.length ?? 6, vsync: this);
     super.initState();
   }
 
@@ -151,10 +522,9 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    print(audit?.date);
     return Scaffold(
       appBar: AppBar(
-          title: Text("client_audit"),
+          title: Text("client_audit".tr()),
           centerTitle: true,
           elevation: 0,
           backgroundColor: blueAccent,
@@ -167,7 +537,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(dateFormat.format(DateTime.tryParse(audit?.date ?? "") ?? DateTime.now()), style: styleBoldP14)
+                    Text(dateFormat.format(audit?.date ?? DateTime.now()), style: styleBoldP14)
                   ]
               ).marginSymmetricWidget(horizontal: margin5X, vertical: blockY * 1),
               PageView(
@@ -178,17 +548,17 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("main_info", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
+                        Text("main_info".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                         Wrap(
                           runSpacing: blockY,
-                          children: (audit?.data ?? []).map<Widget>((data) => AuditDataItem(data).marginSymmetricWidget(horizontal: margin5X)).toList()
+                          children: auditDataWidgets
                         )
                       ]
                     ).scrollWidget(),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("audit", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
+                        Text("audit".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                         ListView.separated(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: false,
@@ -203,7 +573,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                               },
                               child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: blockX, vertical: blockY),
-                                  child: Text(item, style: c == selectedAudit0 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
+                                  child: Text(item.tr(), style: c == selectedAudit0 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
                               )
                             ).center();
                           },
@@ -227,7 +597,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("audit_1", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
+                        Text("audit_1".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                         ListView.separated(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: false,
@@ -242,7 +612,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                               },
                               child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: blockX, vertical: blockY),
-                                  child: Text(item, style: c == selectedAudit1 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
+                                  child: Text(item.tr(), style: c == selectedAudit1 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
                               )
                             ).center();
                           },
@@ -266,7 +636,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("audit_2", style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
+                        Text("audit_2".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                         ListView.separated(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: false,
@@ -281,7 +651,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                               },
                               child: Container(
                                   padding: EdgeInsets.symmetric(horizontal: blockX, vertical: blockY),
-                                  child: Text(item, style: c == selectedAudit2 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
+                                  child: Text(item.tr(), style: c == selectedAudit2 ? styleBoldP14.copyWith(color: blueAccent) : styleNormalP14)
                               )
                             ).center();
                           },
@@ -307,38 +677,68 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
               Row(
                   children: [
                     (currentPage > 0 ? AppTextButton(
-                        Text("back", style: styleBoldP14.copyWith(color: blueAccent)),
+                        Text("back".tr(), style: styleBoldP14.copyWith(color: blueAccent)),
                         onPressed: () => page?.previousPage(duration: Duration(milliseconds: 350), curve: Curves.easeIn)
                     ) : Container()).expanded(),
                     Container(width: 20),
                     AppElevatedButton(
-                        Text(currentPage < 3 ? "next" : "save", style: styleBoldP14.copyWith(color: Colors.white)),
+                        Text(currentPage < 3 ? "next".tr() : "save".tr(), style: styleBoldP14.copyWith(color: Colors.white)),
                         onPressed: () async {
+                          // return;
+                          FocusScope.of(context).unfocus();
                           if(currentPage == 3) {
+                            for(var d in audit?.data ?? <AuditData>[])
+                              if(d.value.isNotEmpty)
+                                print(d.toJson());
+
+                            for(var e1 in (audit?.auditQuestions ?? {}).entries)
+                              for(var e0 in e1.value.entries)
+                                for(var q in e0.value)
+                                  if(q.comment.isNotEmpty)
+                                    print(q.toJson());
+                            // return;
                             if(isLoading) return;
                             setState(() => isLoading = true);
 
                             try {
                               await NetworkRepository.refreshNetworkStatus();
                               if(BlocProvider.of<NetworkCubit>(context).state == ConnectivityResult.none || !(await NetworkRepository.hasNetwork())) {
-                              if(Platform.isIOS) {
-                                var r = await Permission.photos.request();
-                                print(r);
-                              } else {
-                                var r = await Permission.storage.request();
-                                print(r);
-                              }
-                                await LocalStorage().addAudit(audit!);
+                                if(Platform.isIOS) {
+                                  var r = await Permission.photos.request();
+                                  print(r);
+                                } else {
+                                  var r = await Permission.storage.request();
+                                  print(r);
+                                }
                                 try {
-                                  await createPdf(audit!, false);
+                                  await LocalStorage().addAudit(audit!);
+                                } catch(e) {
+                                }
+                                try {
+                                  FocusScope.of(context).unfocus();
+                                  var file = await createPdf(audit!, false, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
+                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
                                 } catch(e) {
                                   print("$e");
                                 }
                               } else {
                                 audit?.isSaved = true;
                                 await AuditRepository.addAudit(audit!);
+                                if(clientPreview?.lastAudit == null || clientPreview!.lastAudit!.millisecondsSinceEpoch < audit!.date.millisecondsSinceEpoch) {
+                                  BlocProvider.of<ClientsCubit>(context).updateClientLastAudit(audit!.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit!.date);
+                                  await FirebaseFirestore.instance.collection(tableClients).doc(audit!.clientId).update({
+                                    "lastAudit": audit!.date,
+                                    "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+                                  });
+                                  await FirebaseFirestore.instance.collection(tableClientsShort).doc(audit!.clientId).update({
+                                    "lastAudit": audit!.date,
+                                    "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+                                  });
+                                }
                                 try {
-                                  await createPdf(audit!, true);
+                                  FocusScope.of(context).unfocus();
+                                  var file = await createPdf(audit!, true, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
+                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
                                 } catch(e) {
                                   print("$e");
                                 }

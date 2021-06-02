@@ -6,6 +6,17 @@ class ClientsCubit extends Cubit<List<ClientPreview>> {
 
   void set(List<ClientPreview> newState) => emit(newState.reversed.toList());
 
+  void updateClientLastAudit(String clientId, String user, DateTime date) {
+    List<ClientPreview> newState = List.of(state);
+    for(var client in newState) {
+      if(client.id == clientId) {
+        client.userLastAudit = user;
+        client.lastAudit = date;
+      }
+    }
+    emit(newState);
+  }
+
   void add(List<ClientPreview> newClients) {
     List<ClientPreview> newState = List.of(state);
     newState.addAll(newClients.reversed.toList());

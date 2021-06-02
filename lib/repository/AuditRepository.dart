@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -61,11 +59,23 @@ class AuditRepository {
                 .instance
                 .ref()
                 .child("$fileName");
+            var file = question.photos![i];
+
+            // TODO compress
+            // print("pre compress ${file.lengthSync()}")
+            // var result = await FlutterImageCompress.compressWithFile(
+            //     file.absolute.path,
+            //     quality: 70
+            // );
+            // file.writeAsBytes(result!.toList());
+            // print("post compress ${file.lengthSync()}");
+
+            var uploadTask = await storageRef.putFile(file);
+            var url = await uploadTask.ref.getDownloadURL();
             try {
-              var uploadTask = await storageRef.putFile(question.photos![i]);
-              var url = await uploadTask.ref.getDownloadURL();
+
               question.photosSrc![i] = url;
-            } catch(e) {}
+            } catch(e) {print("e0 $e");}
             question.photosSrc?.add(fileName);
           }
         }
@@ -82,6 +92,7 @@ class AuditRepository {
         .collection("clients")
         .doc(clientId)
         .collection(tableAuditsShort)
+        .orderBy("date", descending: true)
         .get();
     for(var dataSet in r.docs) {
       var a = ClientAudit.fromJson(dataSet.data());
@@ -122,15 +133,19 @@ class AuditRepository {
       for(var q0 in q1.value.entries) {
         for(var question in q0.value) {
           for(var p = 0; p < question.photosSrc!.length; p++) {
-            if(question.photosSrc![p].isEmpty) continue;
-            var storageRef = FirebaseStorage
-                .instance
-                .ref()
-                .child(question.photosSrc![p]);
-            print("1 ${question.photosSrc![p]}");
-            var newPath = await storageRef.getDownloadURL();
-            print("path) $newPath");
-            question.photosSrc![p] = newPath;
+            try {
+              if(question.photosSrc![p].isEmpty) continue;
+              var storageRef = FirebaseStorage
+                  .instance
+                  .ref()
+                  .child(question.photosSrc![p]);
+              var newPath = await storageRef.getDownloadURL();
+              print("1 ${question.photosSrc![p]}");
+              print("path) $newPath");
+              question.photosSrc![p] = newPath;
+            } catch(e) {
+              print("e $e");
+            }
           }
         }
       }

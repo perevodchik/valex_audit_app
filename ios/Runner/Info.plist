@@ -51,5 +51,27 @@
 	<string>Save photos for audit</string>
 	<key>io.flutter.embedded_views_preview</key>
     <true/>
+    <key>CFBundleLocalizations</key>
+    <array>
+    	<string>ua</string>
+    </array>
+    <key>CFBundleURLTypes</key>
+    	<array>
+    		<dict>
+    			<key>CFBundleTypeRole</key>
+    			<string>Editor</string>
+    			<key>CFBundleURLSchemes</key>
+    			<array>
+    				<string>com.googleusercontent.apps.702203530457-5k1r2q5sro2j9qs3hfps5tvgvq8u9prs</string>
+    			</array>
+    		</dict>
+    		<dict>
+    			<key>CFBundleURLSchemes</key>
+    			<array>
+    				<string>fb648155279154913</string>
+    			</array>
+    		</dict>
+    	</array>
+
 </dict>
 </plist>

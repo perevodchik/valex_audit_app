@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ContactPeopleItem extends StatefulWidget {
   final ContactPeople contactPeople;
@@ -42,14 +43,14 @@ class _State extends State<ContactPeopleItem> {
         child: Wrap(
             runSpacing: 10,
             children: [
-              CustomRoundedTextField(name, hint: "name", helperText: "name",
+              CustomRoundedTextField(name, hint: "people_card_name".tr(), helperText: "people_card_name".tr(),
                   onChanged: (n) => widget.contactPeople.name = n, isEnable: widget.isEditable).center(),
               Row(
                 children: [
-                  CustomRoundedTextField(work, hint: "work", helperText: "work",
+                  CustomRoundedTextField(work, hint: "people_card_work".tr(), helperText: "people_card_work".tr(),
                       onChanged: (w) => widget.contactPeople.work = w, isEnable: widget.isEditable).expanded(),
                   Container(width: 10),
-                  CustomRoundedTextField(phone, hint: "phone", helperText: "phone",
+                  CustomRoundedTextField(phone, hint: "people_card_phone".tr(), helperText: "people_card_phone".tr(),
                       onChanged: (p) => widget.contactPeople.phone = p, isEnable: widget.isEditable).expanded()
                 ]
               ).width(width).height(50)

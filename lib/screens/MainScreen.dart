@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class _State extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("ъї w1ыі ww/.".replaceAll(RegExp(r"[^ іІїЇа-яА-Яa-zA-Z0-9]"), "_"));
     return Scaffold(
       body: Column(
         children: [
@@ -86,7 +88,7 @@ class _State extends State<MainScreen> {
             }
           ).expanded(),
           AppTextButton(
-            Text("new_client", style: styleBoldP14.copyWith(color: blueAccent)),
+            Text("new_client".tr(), style: styleBoldP14.copyWith(color: blueAccent)),
             onPressed: () {
               goToNamed(Routes.newClient, {});
             }

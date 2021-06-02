@@ -85,7 +85,14 @@ class NetworkRepository {
             for(var p = 0; p < (q.photosSrc ?? []).length; p++) {
               var srcTmp = q.photosSrc![p];
               var file = File(srcTmp);
-              var path = "${audit.firebaseId}/${q.question}_${c++}.png";
+              // TODO compress
+              // var result = await FlutterImageCompress.compressWithFile(
+              //     file.absolute.path,
+              //     quality: 70
+              // );
+              // await file.writeAsBytes(result!.toList());
+
+              var path = "${audit.firebaseId}/${q.question}_${c++}.jpg";
               var storageRef = FirebaseStorage
                   .instance
                   .ref()
@@ -104,6 +111,21 @@ class NetworkRepository {
       await LocalStorage().removeAudit(audit);
       await LocalStorage().deleteAuditData(audit.id);
       await LocalStorage().deleteAuditQuestion(audit.id);
+
+      try {
+        var client = await ClientsShortRepository.getClient(audit.clientId);
+        if(client?.lastAudit == null || client!.lastAudit!.millisecondsSinceEpoch < audit.date.millisecondsSinceEpoch) {
+          BlocProvider.of<ClientsCubit>(navigatorKey.currentContext!).updateClientLastAudit(audit.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit.date);
+          await FirebaseFirestore.instance.collection(tableClients).doc(audit.clientId).update({
+            "lastAudit": audit.date,
+            "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+          });
+          await FirebaseFirestore.instance.collection(tableClientsShort).doc(audit.clientId).update({
+            "lastAudit": audit.date,
+            "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+          });
+        }
+      } catch(e) {}
     }
   }
 

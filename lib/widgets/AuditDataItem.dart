@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../All.dart';
 
@@ -30,7 +31,7 @@ class _State extends State<AuditDataItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        key: Key("audit_data_item${widget.data.title}"),
+        key: Key("audit_data_item_${widget.data.id}"),
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
@@ -39,11 +40,14 @@ class _State extends State<AuditDataItem> {
         child: Wrap(
             runSpacing: 10,
             children: [
-              Text(widget.data.title),
-              CustomRoundedTextField(value, hint: "value", helperText: "value", maxLines: 3,
-                  onChanged: (v) => widget.data.value = v, isEnable: widget.isEditable).center(),
+              Text(widget.data.title.tr()),
+              CustomRoundedTextField(value, hint: "data_card_value".tr(), helperText: "data_card_value".tr(), maxLines: 3,
+                  onChanged: (v) {
+                    widget.data.value = v;
+                    print(widget.data.value);
+                  }, isEnable: widget.isEditable).center(),
               if(widget.withAdditional)
-              CustomRoundedTextField(additional, hint: "additional", helperText: "additional", maxLines: 3,
+              CustomRoundedTextField(additional, hint: "data_card_additional".tr(), helperText: "data_card_additional".tr(), maxLines: 3,
                   onChanged: (a) => widget.data.additional = a, isEnable: widget.isEditable).center(),
             ]
         )

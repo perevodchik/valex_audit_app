@@ -213,7 +213,7 @@ class LocalStorage {
         for(var question in entry.value) {
           int c = 0;
           for(var file in question.photos ?? []) {
-            var fileName = "${audit.id}_${question.question}_${c++}.png";
+            var fileName = "${audit.id}_${question.question}_${c++}.jpg";
             var f = await saveFileInTmpDir(file, fileName);
             if(f != null) {
               question.photosSrc?.add(f.path);

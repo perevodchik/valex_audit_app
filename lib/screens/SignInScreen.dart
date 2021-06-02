@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -31,22 +32,20 @@ class _State extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    UserRepository.getUsers();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          SvgPicture.asset("assets/icons/valex_logo.svg", height: 100,),
-          // Icon(Icons.home_work_outlined),
+          SvgPicture.asset("assets/icons/valex_logo.svg", height: 100),
           Wrap(
             runSpacing: blockY * 2.5,
             children: [
-              CustomRoundedTextField(name, hint: "pib"),
-              CustomRoundedTextField(company, hint: "company"),
-              CustomRoundedTextField(rang, hint: "rang")
+              CustomRoundedTextField(name, hint: "login_pib".tr()),
+              CustomRoundedTextField(company, hint: "login_company".tr()),
+              CustomRoundedTextField(rang, hint: "login_rang".tr())
             ]
           ).marginSymmetricWidget(horizontal: margin5X),
-          AppTextButton(Text("next", style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
+          AppTextButton(Text("next".tr(), style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
             var user = User(
                 name: name?.text ?? "",
                 company: company?.text ?? "",
@@ -54,8 +53,8 @@ class _State extends State<SignInScreen> {
             );
             BlocProvider.of<UserCubit>(navigatorKey.currentContext!).set(user);
             await UserRepository.createUser(user);
-            (await SharedPreferences.getInstance()).setString("user", user.id!);
-            print("set userId: [ ${user.id} ]");
+            user.toShared(await SharedPreferences.getInstance());
+            // (await SharedPreferences.getInstance()).setString("user", user.id!);
             goToNamed(Routes.main, {}, isRemovePreviously: true);
           })
         ]

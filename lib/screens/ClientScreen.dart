@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, EventList;
+import 'package:easy_localization/easy_localization.dart';
 
 import '../All.dart';
 
@@ -47,7 +48,6 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
     } else {
       client = await ClientsRepository.getClientById(clientPreview!.id);
     }
-    print("receive $client");
     setState(() {});
     try {
       var r = await ReviewRepository.getClientReviews(client?.id ?? "");
@@ -80,7 +80,7 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     if(appBar == null)
       appBar = AppBar(
-          title: Text("client"),
+          title: Text("client".tr()),
           brightness: Brightness.dark,
           elevation: 0,
           backgroundColor: blueAccent,
@@ -103,9 +103,9 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
         unselectedLabelColor: greyMedium,
         labelColor: blueAccent,
         tabs: [
-          Tab(text: "calendar", icon: Icon(Icons.calendar_today_outlined)),
-          Tab(text: "inventory", icon: Icon(Icons.inventory_2_outlined)),
-          Tab(text: "contactPeoples", icon: Icon(Icons.contact_phone_outlined))
+          Tab(text: "client_calendar".tr(), icon: Icon(Icons.calendar_today_outlined)),
+          Tab(text: "client_inventory".tr(), icon: Icon(Icons.inventory_2_outlined)),
+          Tab(text: "client_contact_peoples".tr(), icon: Icon(Icons.contact_phone_outlined))
         ]
     );
     print(client?.countPC);
@@ -122,14 +122,14 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
                   Wrap(
                         runSpacing: 10,
                         children: [
-                          CustomRoundedTextField(TextEditingController(text: client?.name), helperText: "name",isEnable: false),
-                          CustomRoundedTextField(TextEditingController(text: client?.address), helperText: "address", isEnable: false),
-                          CustomRoundedTextField(TextEditingController(text: client?.inventory), helperText: "inventory", isEnable: false),
-                          CustomRoundedTextField(TextEditingController(text: "${client?.countPC}"), helperText: "countPC", isEnable: false),
-                          CustomRoundedTextField(TextEditingController(text: "${client?.countCow}"), helperText: "countCowcountCow", isEnable: false),
+                          CustomRoundedTextField(TextEditingController(text: client?.name), helperText: "client_name".tr(),isEnable: false),
+                          CustomRoundedTextField(TextEditingController(text: client?.address), helperText: "client_address".tr(), isEnable: false),
+                          CustomRoundedTextField(TextEditingController(text: client?.inventory), helperText: "client_inventory".tr(), isEnable: false),
+                          CustomRoundedTextField(TextEditingController(text: "${client?.countPC}"), helperText: "client_countPC".tr(), isEnable: false),
+                          CustomRoundedTextField(TextEditingController(text: "${client?.countCow}"), helperText: "client_countCow".tr(), isEnable: false),
                         ]
                     ).marginSymmetricWidget(vertical: blockY, horizontal: margin5X),
-                  AppTextButton(Text("audits", style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
+                  AppTextButton(Text("audits".tr(), style: styleBoldP14.copyWith(color: blueAccent)), onPressed: () async {
                     print(client);
                     await goToNamed(Routes.auditListClient, {
                       "client": client
@@ -201,7 +201,7 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
                                         })),
                                     separatorBuilder: (_, i) => Container(height: 10)
                                 ),
-                                AppElevatedButton(Text("add_review"), onPressed: () async {
+                                AppElevatedButton(Text("review_add".tr()), onPressed: () async {
                                   var newReview = await goToNamed(Routes.reviewClient, {
                                     "date": selectedDate,
                                     "client": client

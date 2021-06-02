@@ -16,7 +16,7 @@ class AuditStorage {
     var audits = <ClientAudit> [];
     var r = await AppDatabase.database!.rawQuery("SELECT * FROM audits;");
     for(var dataSet in r) {
-      var a = ClientAudit.fromJson(dataSet);
+      var a = ClientAudit.fromLocalJson(dataSet);
       audits.add(a);
     }
     return audits;
@@ -33,7 +33,7 @@ class AuditStorage {
     await AppDatabase.database?.insert("audits", {
       "id": audit.id,
       "clientId": audit.clientId,
-      "date": audit.date,
+      "date": audit.date.toString(),
       "address": audit.address,
       "place": audit.place,
       "user": audit.user

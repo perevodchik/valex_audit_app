@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:valex_agro_audit_app/All.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ModalCarousel extends StatefulWidget {
   final List<File> photos;
@@ -93,7 +94,7 @@ class _ModalCarouselState extends State<ModalCarousel> {
           ),
           Center(
               child: AppElevatedButton(
-                Text("close"),
+                Text("close".tr()),
                 onPressed: () => Navigator.pop(context)
               )
           )

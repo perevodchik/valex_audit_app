@@ -1,0 +1,381 @@
+{
+  "login_pib": "Прізвище Імя По батькові",
+  "login_company": "Компанія",
+  "login_rang": "Посада",
+
+
+
+  "next": "Далі",
+  "close": "Закрити",
+  "back": "Назад",
+  "save": "Зберегти",
+  "add": "Додати",
+  "new_client": "Новий клієнт",
+  "create_client": "Створення клієнту",
+  "general": "Основне",
+  "date": "Дата",
+  "generate_pdf": "Згенерувати PDF",
+  "create_pdf": "Створити PDF",
+  "edit": "Редаугвати",
+  "start_audit": "Почати аудит",
+  "client": "Клієнт",
+
+  "pdf_revision_point": "Точка перевірки",
+  "pdf_rate": "Рейтинг",
+  "pdf_revision_params": "Параметри перевірки",
+  "pdf_comment": "Коментар",
+  "pdf_photo": "Фото",
+  "pdf_visit_date": "Дата візиту {}",
+  "pdf_gospodarstvo": "Господарство",
+  "pdf_tov": "ТОВ {}",
+  "pdf_dealer": "Сертифікований дилер компанії DeLaval",
+  "pdf_program": "Програма",
+  "pdf_program_title": "Якісне молоко на Вашій фермі",
+  "pdf_manager": "Менеджер {}",
+
+  "main_info": "Основна інформація",
+  "client_edit": "Редагування клієнту",
+  "client_name": "Імя клієнту",
+  "client_address": "Адреса клієнту",
+  "client_client_inventory": "Обладнання",
+  "client_countPC": "Кількість підвісних частин",
+  "client_countCow": "Кількість корів",
+  "client_contact_peoples": "Контактні дані",
+  "client_inventory": "Обладнання",
+  "client_calendar": "Календар",
+
+  "modal_pick_image": "Вибір зображення",
+  "modal_select_image_source": "Виберіть джерело зхображення",
+  "modal_from_camera": "З камери",
+  "modal_from_gallery": "З галареї",
+
+
+
+  "review": "Огляд",
+  "review_add": "Додати огляд",
+  "review_client": "Огляд клієнту",
+  "review_workedCow": "Кількість дійних корів",
+  "review_cowAvgByDay": "Середній надій на корову в день, л",
+  "review_milkByDay": "Добовий надій молока, кг",
+  "review_tovarnistMilk": "Товарність молока, %",
+  "review_milkFat": "Вміст жиру, %",
+  "review_milkProtein": "Вміст білку, %",
+  "review_zakupMilkPrice": "Закупівельна ціна молока грн./кг ",
+  "review_invalidCow": "Кількість хворих корів, гол",
+  "review_mastit": "в т.ч. мастит",
+  "review_kopyta": "копита",
+  "review_endometryt": "ендометрити",
+  "review_bacteryZabrudMilk": "Бактеріальне забруднення, тис./мл мол.",
+  "review_bacterySomatMilk": "Кількість соматичних клітин тис./мл мол.",
+  "review_metaSell": "Продати",
+  "review_metaProduction": "Просунутися у продажу",
+  "review_getQuestion": "Дізнатися про…",
+  "review_questions": "Запитання до огляду",
+  "review_for": "Огляд за {}",
+
+
+
+  "audits": "Аудити",
+  "client_audit": "Аудит клієнту",
+  "audit_main_info": "Головна інформація",
+  "new_audit": "Новий аудит",
+  "last_audit": "Останній аудит",
+
+
+
+  "audit": "Аудит",
+  "audit_0": "Аудит доїльної системи",
+  "audit_1": "Аудит молочної системи",
+  "audit_2": "Аудит промивки",
+
+  "audit_question_first_rate": "Рейтинг",
+  "audit_question_first_comment": "Коментар",
+  "dropdown_select_value": "Оберіть відповідь",
+
+
+
+  "audit_title_vacuum_system": "Вакуумна система",
+  "audit_question_vacuum_nasos": "Вакуумний насос",
+  "audit_question_vacuum_nasos_0": " 1 - візуально чистий, без патьоків мастила,\"працездатний\", з маркуванням (виробник; продуктивність) .   ",
+  "audit_question_vacuum_nasos_1": " 2 - незначно забруднений, з незначними слідами мастила, з маркуванням.  Не оглядався",
+  "audit_question_vacuum_nasos_2": " 3 - досить забруднений; із значними потьоками мастила; без маркування",
+
+  "audit_question_vacuum_glushnyk": "Вакуумний глушник",
+  "audit_question_vacuum_glushnyk_0": "1- нахил від насосу; пристрої мінімізації викидів в навколишнє середовище мастила; відсутність гострих кутів та Т - подібних ділянок; не спрямований в приміщення; незначна шумність",
+  "audit_question_vacuum_glushnyk_1": "2- не оглядався; відсутні пристрої мінімізації викидів в навколишнє  середовище мастила; значна шумність",
+  "audit_question_vacuum_glushnyk_2": "3 - наявність гострих кутів Т подібних з'єднаннь; нахил до вакуумного насосу; висока шумність ",
+
+  "audit_question_vacuum_reciever": "Вакуумний ресивер (циклон)",
+  "audit_question_vacuum_reciever_0": "1 - чистий; з працюючим дренажним клапаном; достатнього об'єму; всередені відсутні сліди молока, підстилочний матеріал;",
+  "audit_question_vacuum_reciever_1": "2 - незначно забруднений; з працюючим дренажним клапаном; всередині присутні сліди підстилочного матеріалу; не оглядався.",
+  "audit_question_vacuum_reciever_2": "3 - забруднений; працездатність дренажного клапану викликае сумнів; всередині присутні сліди молока; ржавчини.",
+
+  "audit_question_vacuumetr": "Вакуумметр",
+  "audit_question_vacuumetr_0": "1 - встановлений в доступному для огляду під час доїння місці; працюючий; в діапазоні від 20 до 80 кПа має градуювання в 2 кПа чи менше,",
+  "audit_question_vacuumetr_1": "2 - не оглядався;",
+  "audit_question_vacuumetr_2": "3 - при недотриманні будь-якого параметру з пункту 1",
+
+  "audit_question_vacuum_reguljator": "Вакуумний регулятор",
+  "audit_question_vacuum_reguljator_0": "1 - працездатний; чистий фільтр; розташований після ресивера; мінімальний вплив шуму на персонал; достатньої продуктивності",
+  "audit_question_vacuum_reguljator_1": "2 - працездатний; незначне забруднення фільтра; достатньої продуктивності; надмірний шум роботи; не оглядався",
+  "audit_question_vacuum_reguljator_2": "3 - непрацездатний; значне забруднення фільтру; розташований до ресивера;",
+
+  "audit_question_sanitarna_camera": "Санітарна камера",
+  "audit_question_sanitarna_camera_0": "1 - чиста зовні та всередині; без ознак потрапляння молока всередині; наявний дренаж;",
+  "audit_question_sanitarna_camera_1": "2- не оглядалась;  незначне забруднення зовні; відсутній дренаж;",
+  "audit_question_sanitarna_camera_2": "3 - значне забруднення зовні; забруднення всередині; сліди молока;",
+
+
+
+  "audit_title_milk_system": "Молочна система",
+  "audit_question_molokopryjmach": "Молокоприймач",
+  "audit_question_molokopryjmach_0": "1 - чистий зовні та всередині; без слідів забруднення в місцях з'єднання з трубами (ввід молока)",
+  "audit_question_molokopryjmach_1": "2 - не оглядався; незначне забруднення зовні; чистий всередині; без слідів забруднення в місцях вводу молока;",
+  "audit_question_molokopryjmach_2": "3 - значне забруднення зовні; сліди забрудненя всередині;",
+
+  "audit_question_milk_nasos": "Молочний насос",
+  "audit_question_milk_nasos_0": "1 - чистий; достатньої потужності (справляється з євакуацією молока не допускаючи закривання молоком вводів; рівень молока не піднімається вище 1\\3 висоти молокоприймача );",
+  "audit_question_milk_nasos_1": "2 - не оглядався; незначне забруднення зовні; чистий всередині;",
+  "audit_question_milk_nasos_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_milk_filter": "Молочний фільтр (гільза та фільтрувальний елемент)",
+  "audit_question_milk_filter_0": "1 - гільза фільтра чиста зовні та всередині;  фільтрувальний елемент одноразовий; замінюється по потребі, але не пізніше ніж через 4 години доїння, його стан контролюють після кожної доїльної сесії, зберігається в належних умовах, має допуск до контакту з харчовими продуктами.",
+  "audit_question_milk_filter_1": "2 - не оглядався;",
+  "audit_question_milk_filter_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_molokoprovid_vid": "Молокопровід від насосу до місця зберігання молока (нагнітальна лінія)Молокопровід  від насосу до місця зберігання молока (нагнітальна лінія)",
+  "audit_question_molokoprovid_vid_0": "1 - чистий зовні та всередині; має можливість фіксуватися в холодильнику та в промивочній ємкості; унеможливлює потрапляння промивочної води у молоко;",
+  "audit_question_molokoprovid_vid_1": "2 - не оглядався",
+  "audit_question_molokoprovid_vid_2": "3 - не відповідає будь чому з п 1",
+
+
+  "audit_question_molokoprovody_do": "Молокопроводи до молокоприймача",
+  "audit_question_molokoprovody_do_0": "1 - мають достатній діаметр; Мають постійний ухил в сторону молокоприймача; не провисають; молочні крани(вводи) розміщені у верхній половині трубопроводу; чисті зовні та  всередині; не мають перешкод для руху молока.Ущільнення в нормальному стані*",
+  "audit_question_molokoprovody_do_1": "2 - мають недостатній діаметр; незначно забрудненні зовні та чисті всередині; молочні крани (вводи) розташовані не у верхній половині трубопроводу; мають перешкоди для руху молока; провисання; не оглядались. Ущільнення в ненормальному стані.",
+  "audit_question_molokoprovody_do_2": "3 - значне забруднення зовні; сліди будь якого забруднення всередині, в любих місцях(включно з краном) які контактують з молоком ",
+
+
+
+  "audit_title_ohlad_system": "Охолодження молока",
+  "audit_question_tanker": "Танк (ємкість зберігання)",
+  "audit_question_tanker_0": "1 - чистий зовні та всередині; достатнього об'єму;",
+  "audit_question_tanker_1": "2 - не оглядався;",
+  "audit_question_tanker_2": "3 - значне забруднення зовні; будь яке забруднення всередині;",
+
+  "audit_question_compresorny_agregaty": "Компресорні агрегати",
+  "audit_question_compresorny_agregaty_0": "1 - достатньої потужності; достатній повітрообмін в місці розташування; без слідів підтікання;",
+  "audit_question_compresorny_agregaty_1": "2 - не оглядались;",
+  "audit_question_compresorny_agregaty_2": "3 - не відповідає будь чому з п. 1",
+
+  "audit_question_promyvka_na_jakosty_zberigannja": "Промивка ємкості зберігання молока",
+  "audit_question_promyvka_na_jakosty_zberigannja_0": "1 - обладноно автоматичною промивкою; бак автомата промивки  чистий зовні та в середині; достатнього об'єму; Незначні відкладення над рівнем заповнення;",
+  "audit_question_promyvka_na_jakosty_zberigannja_1": "2 - не оглядався; не обладнаний автоматичною промивкою; напівавтоматична промивка (пушка)",
+  "audit_question_promyvka_na_jakosty_zberigannja_2": "3 - при наявності автоматичної промивки: значні відкладення над рівнем заповнення бака автомата промивки;",
+
+
+
+  "audit_title_doilny_aparaty": "Доїльні апарати ",
+  "audit_question_colector": "Колектор",
+  "audit_question_colector_0": "1 - чистий зовні та в середині; цілий; ущільнення в нормальному стані*; характеристики пропуску молока відповідають продуктивності тварин; однотипні на всіх доїльних апаратах; обладнані відсічним клапаном з можливісттю його фіксації; повітряний жиклер чистий;",
+  "audit_question_colector_1": "2 - не оглядався;",
+  "audit_question_colector_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_stakany": "Стакани",
+  "audit_question_stakany_0": "1 - чисті; однотипні для всіх доїльних апаратів; не заважають роботі дійкової гуми",
+  "audit_question_stakany_1": "2 - не оглядався;",
+  "audit_question_stakany_2": "2 - не оглядався;",
+
+  "audit_question_polsatory": "Пульсаторні (вакуумні) шланги",
+  "audit_question_polsatory_0": "1 - чисті; однотипні для всіх доїльних апаратів; в нормальному стані* ; достатньої довжини; дозволяють правильно розміщатися підвісній частині; міняються за графіком",
+  "audit_question_polsatory_1": "",
+  "audit_question_polsatory_2": "",
+
+  "audit_question_diykova_guma": "Дійкова гума",
+  "audit_question_diykova_guma_0": "1 - чиста;має в складі короткий молочний шланг; має маркування(виробник, тип) позначки для унеможливлення перекручування; в нормальному стані*; однотипна для всіх доїльних апаратів; замінюється за графіком; підібрана під розмір дійок;",
+  "audit_question_diykova_guma_1": "2 - не оглядалась; не має в складі короткого молочного шлангу; не підбиралася під розмір дійок;",
+  "audit_question_diykova_guma_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_large_molk_shlangy": "Довгі молочні шланги",
+  "audit_question_large_molk_shlangy_0": "1 - чисті; однотипні для всіх доїльних апаратів; в нормальному стані* ; достатньої довжини; дозволяють правильно розміщатися підвісній частині; міняються за графіком;",
+  "audit_question_large_molk_shlangy_1": "2 - не оглядались;",
+  "audit_question_large_molk_shlangy_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_pulsator": "Пульсатор",
+  "audit_question_pulsator_0": "1 - чистий; однотипні для всіх ДА;",
+  "audit_question_pulsator_1": "2 - забруднені; різнотипні; не оглядались",
+  "audit_question_pulsator_2": "3 - на слух працюють з різною частотою (частять; дуже повільно)",
+
+
+
+  "audit_title_vykachka_moloka": "Викачка молока",
+  "audit_question_milk_nasos_double": "Молочний насос",
+  "audit_question_milk_nasos_double_0": "1 - чистий зовні та в середині;",
+  "audit_question_milk_nasos_double_1": "2 - не оглядався;",
+  "audit_question_milk_nasos_double_2": "3 - значне забруднення зовні; будь яке забруднення всередині",
+
+  "audit_question_shlang_vykachly": "Шланг викачки",
+  "audit_question_shlang_vykachly_0": "1- чистий в середині та зовні; не має \"неприємного запаху\"; єксплуатується не більше року;",
+  "audit_question_shlang_vykachly_1": "2 - не оглядався;",
+  "audit_question_shlang_vykachly_2": "3 - значне забруднення зовні; будь яке забруднення всередині; \"неприємний запах\";",
+
+
+
+  "audit_title_system_promyvky": "Система промивки",
+  "audit_question_bak_avtomata_promyvky": "Бак автомата промивки",
+  "audit_question_bak_avtomata_promyvky_0": "1 - чистий зовні та в середині; достатнього об'єму; Незначні відкладення над рівнем заповнення;",
+  "audit_question_bak_avtomata_promyvky_1": "2 - не оглядався;",
+  "audit_question_bak_avtomata_promyvky_2": "3 - значне забруднення зовні; значні відкладення над рівнем заповнення;",
+
+  "audit_question_gnizda_promyvky": "Гнізда промивки",
+  "audit_question_gnizda_promyvky_0": "1 - чистий зовні та в середині; достатнього об'єму; Незначні відкладення над рівнем заповнення;",
+  "audit_question_gnizda_promyvky_1": "2 - не оглядався;",
+  "audit_question_gnizda_promyvky_2": "3 - значне забруднення зовні; значні відкладення над рівнем заповнення;",
+
+
+
+  "audit_title_audit_1": "Аудит процедури доїння",
+  "audit_question_zahalni": "Загальні",
+  "audit_question_zahalni_0": "1- процедура прописана та знаходиться в доступному для огляду операторами місці; принаймі 1 раз на рік проводиться навчання операторів; оператори займаються тільки доїнням.",
+  "audit_question_zahalni_1": "2 - не оглядались;",
+  "audit_question_zahalni_2": "3 - процедура не прописана; знаходиться в недоступному для огляду місці; не проводиться навчання операторів.",
+
+  "audit_question_prepare": "Переддійна обробка",
+  "audit_question_prepare_0": "1 - засіб для переддійної обробки (пінний ОптіБлу ; перекис водню ); здоювання перших цівок у переддійну чашу;  індивідуальні серветки.",
+  "audit_question_prepare_1": "2 - не оглядались; не використовується засіб для переддійної обробки вимені.",
+  "audit_question_prepare_2": "",
+
+  "audit_question_pidcluchennhja": "Під'єднання підвісної частини",
+  "audit_question_pidcluchennhja_0": "1 - без підсмоктування повітря. Від початку переддійної обробки до підєднання > 30 сек - 120 сек <",
+  "audit_question_pidcluchennhja_1": "2 - не оглядались;",
+  "audit_question_pidcluchennhja_2": "3 - з підсмоктуванням повітря; Від початку переддійної обробки до підєднання < 30 сек - 120 сек >",
+
+  "audit_question_doinnja": "Доїння",
+  "audit_question_doinnja_0": "1 - тварини поводяться спокійно; при падінні ПЧ, підсмоктуваннях повітря оператор відразу реагує.",
+  "audit_question_doinnja_1": "2 - не оглядались;",
+  "audit_question_doinnja_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_znjattja": "Зняття підвісної частини",
+  "audit_question_znjattja_0": "1 - При знятті перевіряється стан вимені; зняття проводиться при \"пустому\" вимені (якщо після зняття ПЧ руками можна надоїти до 0,5 л (до 5%)  молока то це пусте вим'я); при знятті перекривається вакуум (клапан); при автоматичному знятті не використовується \"ручне\" керування (у ДЗ допускається ручне зняття з 1-2 тварин у ряду (які довго дояться)",
+  "audit_question_znjattja_1": "2 - не оглядались;",
+  "audit_question_znjattja_2": "3 - не відповідає будь чому з п 1",
+
+  "audit_question_pisljadijna": "Післядійна обробка вимені",
+  "audit_question_pisljadijna_0": "1 - проводиться відразу після зняття ПЧ ( в ДЗ перед виходом ); В результаті обробки на сфінктері є крапля розчину; оброблено принаймі 1/3 довжини дійки; засіб для обробки зареєстрований відповідно до законодавства України.",
+  "audit_question_pisljadijna_1": "2 - не оглядались;",
+  "audit_question_pisljadijna_2": "3 - не відповідає будь чому з п.1",
+
+
+
+  "audit_title_jakist_vody": "Якість води",
+  "audit_question_zhorskist": "Жорсткість",
+  "audit_question_zhorskist_0": "1 - до 8°dH; до  2,85 м г- екв/л; до 1,42 ммоль/л;",
+  "audit_question_zhorskist_1": "2 - від 8 до 18°dH;  2,85 - 6,41 мг - екв/л; 1,42- 3,2 ммоль/л;",
+  "audit_question_zhorskist_2": "3 - від 18 до 30°dH; 6,41 - 10,7 мг - екв/л; 3,2 - 5,35 ммоль/л;",
+
+
+
+  "audit_title_wash_zasoby": "Миючі засоби",
+  "audit_question_mijuchi_zasoby": "Миючі засоби, які використовуються зараз",
+  "audit_question_mijuchi_zasoby_0": "",
+  "audit_question_mijuchi_zasoby_1": "",
+  "audit_question_mijuchi_zasoby_2": "",
+
+  "audit_question_luzhi": "Лужні",
+  "audit_question_luzhi_0": "",
+  "audit_question_luzhi_1": "",
+  "audit_question_luzhi_2": "",
+
+  "audit_question_kislotni": "Кислотні",
+  "audit_question_kislotni_0": "",
+  "audit_question_kislotni_1": "",
+  "audit_question_kislotni_2": "",
+
+  "audit_question_upakovka": "Упаковка; маркування;",
+  "audit_question_upakovka_0": "1 - каністри; бочки;  різного кольору (сині для лугу, червоні для кислоти); етикетка з інструкцією по використанню українською мовою.",
+  "audit_question_upakovka_1": "2 - каністри; бочки;  одного кольору (кришки - сині для лугу, червоні для кислоти); етикетка з інструкцією по використанню українською мовою.",
+  "audit_question_upakovka_2": "3 - без кольорового маркування упаковки; без інструкції на етикетці; на етикетці відстуній текст українською мовою; утворює піну (піниться);",
+
+  "audit_question_vyrobnik": "Виробник миючих засобів.",
+  "audit_question_vyrobnik_0": "1- одночасно є виробником доїльного обладнання; рекомендований обслуговуваючою сервісною компанією;",
+  "audit_question_vyrobnik_1": "2 - не є виробником доїльного обладнання; не має рекомендацій обслуговуючої доїльне обладнання сервісної компанії.",
+  "audit_question_vyrobnik_2": "",
+
+
+
+  "audit_title_promyvka_systemy": "Промивка системи",
+  "audit_question_first_opoliskuvannja": "Попередне ополіскування",
+  "audit_question_first_opoliskuvannja_0": "1 - температура входу води не більше 55°С; на виході не менше 30°С; вода в кінці циклу прозора;",
+  "audit_question_first_opoliskuvannja_1": "2 - температура входу води  більше 55°С; на виході  менше 30°С; вода в кінці циклу має незначне помутніння;",
+  "audit_question_first_opoliskuvannja_2": "3 - температура входу води  більше 55°С; на виході  менше 30°С; вода в кінці циклу має значне помутніння;  ",
+
+  "audit_question_ph_rob_rozchynu": "рН робочого розчину (перед початком циклу).",
+  "audit_question_ph_rob_rozchynu_0": "1- для кислотної в межах 2,5 - 3,5; для лужної в межах 10,5 - 12,5",
+  "audit_question_ph_rob_rozchynu_1": "2 -не визначався.",
+  "audit_question_ph_rob_rozchynu_2": "3 - відрізняється від значеннь в п 1",
+
+  "audit_question_circul_promyvka_water": "Циркуляційна промивка (об'єм води)",
+  "audit_question_circul_promyvka_water_0": "1 - для ЛДУ  не менше ніж: 10 літрів на 1 ПЧ + 20л   (ЛДУ 200 :  12х 10 +20=140)    для ДЗ  не менше ніж 5 літрів на 1ПЧ +20 л  (ДЗ 2 х 10 :  20х5+20= 120)",
+  "audit_question_circul_promyvka_water_1": "2 - не визначалась",
+  "audit_question_circul_promyvka_water_2": "3 -менше ніж в п 1.",
+
+  "audit_question_gnizda_promyvky_temp": "Циркуляційна промивка (температура)",
+  "audit_question_gnizda_promyvky_temp_0": "1 - температура входу води більше 80°С; на виході,  не менше 40°С; вода в кінці циклу прозора; (рН в  кінці циклу > 10 (для лужної); < 4 (для кислотної) для миючих ДеЛаваль)",
+  "audit_question_gnizda_promyvky_temp_1": "2 - температура входу води менше 80°С; на виході,  не менше 40°С; ; (рН в  кінці циклу > 10 (для лужної); < 4 (для кислотної) для миючих ДеЛаваль)",
+  "audit_question_gnizda_promyvky_temp_2": "3 - температура входу води менше 60°С; на виході,   менше 40°С;; (рН в  кінці циклу < 10 (для лужної);  > 4 (для кислотної) для миючих ДеЛаваль)",
+
+  "audit_question_gnizda_promyvky_hour": "Циркуляційна промивка (час)",
+  "audit_question_gnizda_promyvky_hour_0": "1 -    7 - 10 хвилин",
+  "audit_question_gnizda_promyvky_hour_1": "2 -    10 - 20 хвилин;",
+  "audit_question_gnizda_promyvky_hour_2": "3 -     більше 20 хвилин, менше 7 хвилин",
+
+  "audit_question_gnizda_promyvky_probky": "Циркуляційна промивка (пробки)",
+  "audit_question_gnizda_promyvky_probky_0": "1 - за час циклу від 8 пробок на кільце; ритмічні; гарно наповнені; швидкі (при потраплянні в молокоприймач розбавається та омиває всю внутрішню поверхню молокоприймача частина потрапляє в санітарну камеру)",
+  "audit_question_gnizda_promyvky_probky_1": "2 - менше ніж 8 на кільце; не ритмічні;",
+  "audit_question_gnizda_promyvky_probky_2": "3 - Погано наповнені; не швидкі.",
+
+  "audit_question_gnizda_promyvky_fact": "Цирк. промивка (факт. концентрація миючих засобів, %)",
+  "audit_question_gnizda_promyvky_fact_0": "1 - від 0,5% до 1%",
+  "audit_question_gnizda_promyvky_fact_1": "2 - менше ніж 0,5% більше ніж 1%",
+  "audit_question_gnizda_promyvky_fact_2": "3 - не визначалась",
+
+
+
+  "audit_address": "Населений пункт, область",
+  "audit_ustanovka": "Доїльна установка",
+  "audit_place_count": "Кількість доїльних місць",
+  "audit_cow_count": "Кількість корів ",
+  "audit_milk_by_day": "Добовий надій молока, кг",
+  "audit_milk": "Товарність молока, %",
+  "audit_milk_bakterii": "Бактеріальне забруднення, тис./мл мол.",
+  "audit_milk_somat": "Кількість соматичних клітин тис./мл мол.",
+  "audit_milk_fat": "Вміст жиру, %",
+  "audit_milk_protein": "Вміст білку, %",
+  "audit_milk_price": "Закупівельна ціна молока грн./кг ",
+  "audit_inner_number": "Внутрішній номер",
+  "audit_place": "Господарство",
+
+
+
+  "questions": "Запитання",
+  "question_card_question": "Запитання",
+  "question_card_answer": "Відповідь",
+  "question_card_change": "Що би змінив",
+
+
+
+  "data_card_value": "Значення",
+  "data_card_additional": "Додатково",
+
+
+
+  "people_card_name": "Імя",
+  "people_card_work": "Посада",
+  "people_card_phone": "Номер телефону",
+
+
+
+  "inventory_card_name": "Назва",
+  "inventory_card_count": "Кількість",
+  "inventory_card_comment": "Коментар"
+
+}

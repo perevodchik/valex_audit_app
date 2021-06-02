@@ -9,6 +9,7 @@ class ClientsShortRepository {
     var clients = await FirebaseFirestore
         .instance
         .collection(tableClientsShort)
+        .orderBy("lastAudit", descending: true)
         .get();
     for(var dataSet in clients.docs) {
       try {
@@ -18,6 +19,17 @@ class ClientsShortRepository {
       } catch(e) {}
     }
     return clientsList;
+  }
+
+  static Future<ClientPreview?> getClient(String id) async {
+    var client = await FirebaseFirestore
+        .instance
+        .collection(tableClientsShort)
+        .doc(id)
+        .get();
+    print(client.data());
+    if(client.exists) return ClientPreview.fromJson(client.data()!);
+    return null;
   }
 
   static Future<void> updateClient(ClientPreview client) async {

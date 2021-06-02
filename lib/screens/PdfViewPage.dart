@@ -9,7 +9,8 @@ import 'package:share/share.dart';
 
 class PdfViewPage extends StatefulWidget {
   final File pdf;
-  PdfViewPage(this.pdf);
+  final ClientAudit audit;
+  PdfViewPage(this.pdf, this.audit);
 
   @override
   PdfViewPageState createState() => PdfViewPageState();
@@ -34,6 +35,7 @@ class PdfViewPageState extends State<PdfViewPage> {
       body: Scaffold(
         appBar: AppBar(
           title: Text("Document"),
+          centerTitle: true,
           brightness: Brightness.dark,
           backgroundColor: blueAccent,
           elevation: 0,
@@ -44,6 +46,12 @@ class PdfViewPageState extends State<PdfViewPage> {
                 Share.shareFiles([widget.pdf.path],
                 text: "audit");
               }
+            ),
+            IconButton(
+                icon: Icon(Icons.add_to_drive_outlined),
+                onPressed:() async {
+                  uploadFileToDrive(widget.pdf, widget.audit.user, widget.audit.address, widget.audit.date);
+                }
             )
           ]
         ),

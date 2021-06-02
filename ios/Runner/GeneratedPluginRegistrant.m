@@ -46,6 +46,18 @@
 @import flutter_pdfview;
 #endif
 
+#if __has_include(<fluttertoast/FluttertoastPlugin.h>)
+#import <fluttertoast/FluttertoastPlugin.h>
+#else
+@import fluttertoast;
+#endif
+
+#if __has_include(<google_sign_in/FLTGoogleSignInPlugin.h>)
+#import <google_sign_in/FLTGoogleSignInPlugin.h>
+#else
+@import google_sign_in;
+#endif
+
 #if __has_include(<image_picker/FLTImagePickerPlugin.h>)
 #import <image_picker/FLTImagePickerPlugin.h>
 #else
@@ -92,6 +104,8 @@
   [FLTFirebaseDatabasePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseDatabasePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
   [FLTPDFViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPDFViewFlutterPlugin"]];
+  [FluttertoastPlugin registerWithRegistrar:[registry registrarForPlugin:@"FluttertoastPlugin"]];
+  [FLTGoogleSignInPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTGoogleSignInPlugin"]];
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];

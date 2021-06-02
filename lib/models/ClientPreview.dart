@@ -4,9 +4,9 @@ class ClientPreview{
   String id;
   String? name;
   String? address;
-  String? dateLastAudit;
   String? userLastAudit;
   int? createdAt;
+  DateTime? lastAudit;
 
   bool get isCached => id.length > 30 && id.contains("_");
   String get firebaseId => isCached ? id.split("_")[0] : id;
@@ -15,34 +15,34 @@ class ClientPreview{
       {this.id = "",
       this.name,
       this.address,
-      this.dateLastAudit,
       this.userLastAudit,
-      this.createdAt});
+      this.createdAt,
+      this.lastAudit});
 
   factory ClientPreview.fromJson(Map<String, dynamic> data) => ClientPreview(
       id: data["id"] ?? "",
       name: data["name"] ?? "", 
       address: data["address"] ?? "", 
-      dateLastAudit: data["dateLastAudit"] ?? "", 
       userLastAudit: data["userLastAudit"] ?? "",
-      createdAt: data["createdAt"] ?? 0
+      createdAt: data["createdAt"] ?? 0,
+      lastAudit: data["lastAudit"] != null ? DateTime.fromMillisecondsSinceEpoch(data["lastAudit"].millisecondsSinceEpoch) : null
   );
 
   factory ClientPreview.fromClient(ClientFull client) => ClientPreview(
     id: client.id,
     name: client.name,
     address: client.address,
-    dateLastAudit: null,
     userLastAudit: null,
-    createdAt: client.createdAt
+    createdAt: client.createdAt,
+    lastAudit: client.lastAudit
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "address": address,
-    "dateLastAudit": dateLastAudit,
     "userLastAudit": userLastAudit,
-    "createdAt": createdAt
+    "createdAt": createdAt,
+    "lastAudit": lastAudit
   };
 
   void update(ClientPreview client) {
@@ -55,13 +55,12 @@ class ClientPreview{
     id: id ?? this.id,
     name: name ?? this.name,
     address: address ?? this.address,
-    dateLastAudit: dateLastAudit ?? this.dateLastAudit,
     userLastAudit: userLastAudit ?? this.userLastAudit,
     createdAt: createdAt ?? this.createdAt
   );
 
   @override
   String toString() {
-    return '{id: $id, name: $name, address: $address, dateLastAudit: $dateLastAudit, userLastAudit: $userLastAudit}';
+    return '{id: $id, name: $name, address: $address, userLastAudit: $userLastAudit, lastAudit: $lastAudit}';
   }
 }
