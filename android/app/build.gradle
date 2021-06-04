@@ -51,7 +51,7 @@ android {
         }
         release {
             signingConfig signingConfigs.debug
-            manifestPlaceholders.appName = "Audit App $flutterVersionName"
+            manifestPlaceholders.appName = "Audit App"
         }
     }
 }
