@@ -30,13 +30,6 @@ class _State extends State<AppRoundedDropdown> {
           hint: Text("dropdown_select_value".tr()),
           isDense: true,
           isExpanded: true,
-
-          // selectedItemBuilder: (context) {
-          //   return [
-          //     Text("123")
-          //   ];
-          // },
-
           items: widget.items.map((String value) {
             return new DropdownMenuItem<String>(
                 value: value,

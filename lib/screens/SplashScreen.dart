@@ -32,6 +32,12 @@ class _State extends State<SplashScreen> {
       } else {
         BlocProvider.of<UserCubit>(context).set(user);
         goToNamed(Routes.main, {}, isRemovePreviously: true);
+        UserRepository.getUserById(user.id!).then((value) async {
+          if(value != null) {
+            BlocProvider.of<UserCubit>(context).set(value);
+            value.toShared(await SharedPreferences.getInstance());
+          }
+        });
       }
     });
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:valex_agro_audit_app/All.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:valex_agro_audit_app/widgets/ProgressDialog.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -39,9 +42,20 @@ class _State extends State<MainScreen> {
     super.dispose();
   }
 
+  Future<void> qwqw() async {
+    var controller = new StreamController<String>();
+    progressDialogStream(controller.stream);
+    for(var c = 0; c < 10; c++) {
+      controller.add("Tick $c");
+      await Future.delayed(Duration(seconds: 1));
+    }
+    Navigator.pop(context);
+    await controller.close();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("ъї w1ыі ww/.".replaceAll(RegExp(r"[^ іІїЇа-яА-Яa-zA-Z0-9]"), "_"));
+    // print("ъї w1ыі ww/.".replaceAll(RegExp(r"[^ іІїЇа-яА-Яa-zA-Z0-9]"), "_"));
     return Scaffold(
       body: Column(
         children: [
@@ -80,8 +94,10 @@ class _State extends State<MainScreen> {
                   },
                   child: ListView(
                       shrinkWrap: true,
-                      children: data.map<Widget>((c) => ClientPreviewWidget(c)
-                          .marginWidget(left: margin5X, right: margin5X, bottom: blockY)
+                      physics: BouncingScrollPhysics(),
+                      children: data.map<Widget>((c) => ClientPreviewWidget(c, onDelete: () async {
+                        BlocProvider.of<ClientsCubit>(context).remove(c);
+                      }).marginWidget(left: margin5X, right: margin5X, bottom: blockY)
                       ).toList()
                   )
               );

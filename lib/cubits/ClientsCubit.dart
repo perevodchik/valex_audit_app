@@ -17,6 +17,12 @@ class ClientsCubit extends Cubit<List<ClientPreview>> {
     emit(newState);
   }
 
+  void remove(ClientPreview client) {
+    List<ClientPreview> newState = List.of(state);
+    newState.removeWhere((c) => c.id == client.id);
+    emit(newState);
+  }
+
   void add(List<ClientPreview> newClients) {
     List<ClientPreview> newState = List.of(state);
     newState.addAll(newClients.reversed.toList());

@@ -48,10 +48,12 @@ android {
         debug {
             signingConfig signingConfigs.debug
             manifestPlaceholders.appName = "Audit App $flutterVersionName"
+            setProperty("archivesBaseName", "Audit App a." + flutterVersionName)
         }
         release {
             signingConfig signingConfigs.debug
             manifestPlaceholders.appName = "Audit App"
+            setProperty("archivesBaseName", "Audit app b." + flutterVersionName)
         }
     }
 }

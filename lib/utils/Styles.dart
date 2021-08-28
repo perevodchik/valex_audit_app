@@ -15,6 +15,11 @@ const TextStyle styleBoldP34 = const TextStyle(
     fontSize: 34,
     fontFamily: "Arial"
 );
+const TextStyle styleBoldP26 = const TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 26,
+    fontFamily: "Arial"
+);
 const TextStyle styleBoldP13 = const TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 13,

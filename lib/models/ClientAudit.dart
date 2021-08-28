@@ -7,6 +7,7 @@ class ClientAudit {
   String clientId;
   String user;
   String place;
+  String fileUrl;
   DateTime date;
   String address;
   bool isSaved;
@@ -16,7 +17,7 @@ class ClientAudit {
   bool get isCached => id.length > 30 && id.contains("_");
   String get firebaseId => isCached ? id.split("_")[0] : id;
 
-  ClientAudit(this.id, this.clientId, this.user, this.place, this.date,
+  ClientAudit(this.id, this.clientId, this.user, this.place, this.fileUrl, this.date,
       this.address, this.isSaved, this.data, this.auditQuestions);
 
   Map<String, dynamic> toJson() {
@@ -34,6 +35,7 @@ class ClientAudit {
       "clientId": clientId,
       "user": user,
       "place": place,
+      "fileUrl": fileUrl,
       "date": date,
       "address": address,
       "isSaved": isSaved,
@@ -47,6 +49,7 @@ class ClientAudit {
       "clientId": clientId,
       "date": date,
       "place": place,
+      "fileUrl": fileUrl,
       "user": user,
       "address": address,
       "isSaved": isSaved
@@ -80,8 +83,8 @@ class ClientAudit {
         data["clientId"] ?? "",
         data["user"] ?? "",
         data["place"] ?? "",
-        // data["date"],
-        DateTime.fromMillisecondsSinceEpoch(data["date"].millisecondsSinceEpoch),
+        data["fileUrl"] ?? "",
+        data["date"] is String ? DateTime.tryParse(data["date"]) ?? DateTime.now() : DateTime.fromMillisecondsSinceEpoch(data["date"].millisecondsSinceEpoch),
         data["address"],
         data["isSaved"] ?? false,
         auditData,
@@ -116,6 +119,7 @@ class ClientAudit {
         data["clientId"] ?? "",
         data["user"] ?? "",
         data["place"] ?? "",
+        data["fileUrl"] ?? "",
         DateTime.tryParse(data["date"]) ?? DateTime.now(),
         data["address"],
         data["isSaved"] ?? false,

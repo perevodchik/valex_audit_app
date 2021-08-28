@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/analytics/v3.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
@@ -10,10 +8,14 @@ import 'package:googleapis/storage/v1.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:valex_agro_audit_app/All.dart';
 
 Future<File?> selectImage({ImageSource source = ImageSource.camera, int quality = 80}) async {
-  final f = await ImagePicker().getImage(source: source, imageQuality: quality);
+  final f = await ImagePicker().getImage(
+      source: source,
+      imageQuality: quality,
+      maxWidth: 1920,
+      maxHeight: 1024
+  );
   if(f == null) return null;
   return File(f.path);
 }
@@ -49,17 +51,9 @@ Future<void> uploadFileToDrive(File file, String user, String place, DateTime au
   final googleSignIn = GoogleSignIn.standard(scopes: [drive.DriveApi.driveScope]);
   GoogleSignInAccount? account = await googleSignIn.signIn();
   if(account == null) return;
-  var now = DateTime.now();
-  // var name = BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "admin";
-  // name = name.replaceAll(RegExp(r"[^ іІїЇа-яА-Яa-zA-Z0-9]"), "");
-  // var date = "${now.year}${now.month}${now.day}${now.hour}${now.minute}";
   var date = DateFormat('HH:mm dd.MM.yyyy').format(auditDate);
   String fileName = "$user $place $date.pdf";
-  // String fileName = "КоштураВладивлав_$date.pdf";
   final authHeaders = await account.authHeaders;
-  // 'Content-Type: text/html; charset=utf-8'
-  // authHeaders["charset"] = "utf-8";
-  // authHeaders["Content-Type"] = "text/html";
   print(authHeaders);
   final authenticateClient = GoogleAuthClient(authHeaders);
   final driveApi = drive.DriveApi(authenticateClient);
@@ -79,10 +73,6 @@ class GoogleAuthClient extends http.BaseClient {
   GoogleAuthClient(this._headers);
 
   Future<http.StreamedResponse> send(http.BaseRequest request) {
-    print("request headers");
-    print("${request.headers}");
-    print("extra headers");
-    print("$_headers");
     return _client.send(request..headers.addAll(_headers));
   }
 }

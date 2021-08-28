@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:valex_agro_audit_app/widgets/ProgressDialog.dart';
 
 import '../All.dart';
 
@@ -46,6 +48,7 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
               .state
               ?.name ?? "",
           "place",
+          "",
           DateTime.now(),
           clientPreview!.address!,
           false,
@@ -684,25 +687,15 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                     AppElevatedButton(
                         Text(currentPage < 3 ? "next".tr() : "save".tr(), style: styleBoldP14.copyWith(color: Colors.white)),
                         onPressed: () async {
-                          // return;
                           FocusScope.of(context).unfocus();
                           if(currentPage == 3) {
-                            for(var d in audit?.data ?? <AuditData>[])
-                              if(d.value.isNotEmpty)
-                                print(d.toJson());
-
-                            for(var e1 in (audit?.auditQuestions ?? {}).entries)
-                              for(var e0 in e1.value.entries)
-                                for(var q in e0.value)
-                                  if(q.comment.isNotEmpty)
-                                    print(q.toJson());
-                            // return;
-                            if(isLoading) return;
-                            setState(() => isLoading = true);
-
+                            var controller = new StreamController<String>();
+                            progressDialogStream(controller.stream);
                             try {
+                              controller.add("Перевірка мережі");
+                              controller.add("qwe");
                               await NetworkRepository.refreshNetworkStatus();
-                              if(BlocProvider.of<NetworkCubit>(context).state == ConnectivityResult.none || !(await NetworkRepository.hasNetwork())) {
+                              if(BlocProvider.of<NetworkCubit>(context).state != ConnectivityResult.wifi || !(await NetworkRepository.hasNetwork())) {
                                 if(Platform.isIOS) {
                                   var r = await Permission.photos.request();
                                   print(r);
@@ -711,19 +704,28 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                                   print(r);
                                 }
                                 try {
+                                  controller.add("Локальне збереження");
                                   await LocalStorage().addAudit(audit!);
+                                  controller.add("Локальне збереження завершено");
                                 } catch(e) {
+                                  controller.add("Помилка локального збереження");
+                                  await Future.delayed(Duration(seconds: 10));
                                 }
                                 try {
                                   FocusScope.of(context).unfocus();
+                                  controller.add("Створення pdf файлу");
                                   var file = await createPdf(audit!, false, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
-                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfFileViewPage(file, audit!)));
                                 } catch(e) {
+                                  controller.add("Помилка: $e");
                                   print("$e");
+                                  await Future.delayed(Duration(seconds: 10));
+                                  Navigator.pop(context);
                                 }
                               } else {
                                 audit?.isSaved = true;
-                                await AuditRepository.addAudit(audit!);
+                                await AuditRepository.addAudit(audit!, s: controller);
                                 if(clientPreview?.lastAudit == null || clientPreview!.lastAudit!.millisecondsSinceEpoch < audit!.date.millisecondsSinceEpoch) {
                                   BlocProvider.of<ClientsCubit>(context).updateClientLastAudit(audit!.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit!.date);
                                   await FirebaseFirestore.instance.collection(tableClients).doc(audit!.clientId).update({
@@ -738,15 +740,19 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
                                 try {
                                   FocusScope.of(context).unfocus();
                                   var file = await createPdf(audit!, true, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
-                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
+                                  Navigator.pushReplacement(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfFileViewPage(file, audit!)));
                                 } catch(e) {
                                   print("$e");
                                 }
                               }
                             } catch(e) {
+                              controller.add("Помилка: $e");
                               print("$e");
+                              await Future.delayed(Duration(seconds: 10));
+                              Navigator.pop(context);
                             }
-                            setState(() => isLoading = false);
+                            controller.close();
+                            // setState(() => isLoading = false);
                           }
                           if(currentPage < 3) {
                             page?.nextPage(duration: Duration(milliseconds: 350), curve: Curves.easeIn);
@@ -758,8 +764,8 @@ class _State extends State<AuditClientScreen> with SingleTickerProviderStateMixi
               ).width(width).marginSymmetricWidget(horizontal: margin5X).marginWidget(bottom: blockY * 2.5)
             ]
           ),
-          if(isLoading)
-            LoadingHud()
+          // if(isLoading)
+          //   LoadingHud()
         ]
       )
     );

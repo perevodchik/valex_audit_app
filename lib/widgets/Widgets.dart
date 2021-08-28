@@ -15,3 +15,6 @@ export 'AuditItem.dart';
 export 'modals/ModalCarouselNetwork.dart';
 export 'modals/ModalCarousel.dart';
 export 'modals/ModalImageSourcePicker.dart';
+export 'modals/ModalAcceptClientDelete.dart';
+export 'modals/ModalAcceptAuditDelete.dart';
+export 'modals/ProgressDialog.dart';

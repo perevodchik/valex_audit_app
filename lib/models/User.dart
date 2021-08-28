@@ -5,21 +5,31 @@ class User {
   String? name;
   String? company;
   String? rang;
+  bool canDelete;
+  bool canEdit;
+  bool canCreate;
 
-  User({this.id, this.name, this.company, this.rang});
+  User({this.id, this.name, this.company, this.rang,
+    this.canDelete = false, this.canEdit = false, this.canCreate = false});
 
   factory User.fromJson(Map<String, dynamic> data) => User(
       id: data["id"] ?? "",
       name: data["name"] ?? "",
       company: data["company"] ?? "",
-      rang: data["rang"] ?? ""
+      rang: data["rang"] ?? "",
+      canDelete: data["canDelete"] ?? false,
+      canEdit: data["canEdit"] ?? false,
+      canCreate: data["canCreate"] ?? false,
   );
 
   factory User.fromShared(SharedPreferences s) => User(
       id: s.getString("user"),
       name: s.getString("name"),
       company: s.getString("company"),
-      rang: s.getString("rang")
+      rang: s.getString("rang"),
+      canDelete: s.getBool("canDelete") ?? false,
+      canEdit: s.getBool("canEdit") ?? false,
+      canCreate: s.getBool("canCreate") ?? false
   );
 
   void toShared(SharedPreferences s) {
@@ -27,12 +37,18 @@ class User {
     s.setString("name", name ?? "");
     s.setString("company", company ?? "");
     s.setString("rang", rang ?? "");
+    s.setBool("canDelete", canDelete);
+    s.setBool("canEdit", canEdit);
+    s.setBool("canCreate", canCreate);
   }
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "company": company,
-    "rang": rang
+    "rang": rang,
+    "canDelete": canDelete,
+    "canEdit": canEdit,
+    "canCreate": canCreate
   };
 
   User copyWith({id, name, company, rang}) => User(
@@ -43,7 +59,5 @@ class User {
   );
 
   @override
-  String toString() {
-    return "{id: $id, name: $name, company: $company, rang: $rang}";
-  }
+  String toString() => toJson().toString();
 }

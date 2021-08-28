@@ -57,24 +57,27 @@ class NetworkRepository {
   static Future<void> sync() async {
     print("sync begin");
     var network = BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!);
-    if(network.state == ConnectivityResult.none) return;
-
-    BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).emit(Sync.PROCESS);
+    if(network.state != ConnectivityResult.wifi) return;
+    BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("start_sync");
     await syncClients(network);
     await syncReviews(network);
     await syncAudits(network);
 
-    BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).emit(Sync.DONE);
+    BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Sync.DONE");
     print("sync finish");
   }
 
   static Future<void> syncAudits(NetworkCubit network) async {
     var audits = await LocalStorage().getAuditsAll();
     for(var audit in audits) {
+      var network = BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!);
+      if(network.state != ConnectivityResult.wifi) return;
+
       var clientId = audit.clientId;
       if(isCacheId(clientId))
         clientId = toFirebaseId(clientId);
       audit.clientId = clientId;
+      BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Синхронізація аудиту ${audit.id}");
 
       audit.data = await LocalStorage().getAuditData(audit.id);
       audit.auditQuestions = await LocalStorage().getAuditQuestions(audit.id);
@@ -98,16 +101,21 @@ class NetworkRepository {
                   .ref()
                   .child("$path");
               try {
+                BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Завантаження фотографії аудиту $path");
                 var uploadTask = await storageRef.putFile(file);
                 var url = await uploadTask.ref.getDownloadURL();
                 q.photosSrc![p] = path;
+                BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Видалення локальної фотографії аудиту $path");
                 await file.delete();
-              } catch(e) {}
+              } catch(e) {
+                BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
+              }
             }
           }
         }
       }
       await AuditRepository.addAudit(audit);
+      BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Видалення локальних даних аудиту ${audit.id}");
       await LocalStorage().removeAudit(audit);
       await LocalStorage().deleteAuditData(audit.id);
       await LocalStorage().deleteAuditQuestion(audit.id);
@@ -115,6 +123,7 @@ class NetworkRepository {
       try {
         var client = await ClientsShortRepository.getClient(audit.clientId);
         if(client?.lastAudit == null || client!.lastAudit!.millisecondsSinceEpoch < audit.date.millisecondsSinceEpoch) {
+          BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Оновлення останнього аудиту для клієнта ${audit.clientId}");
           BlocProvider.of<ClientsCubit>(navigatorKey.currentContext!).updateClientLastAudit(audit.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit.date);
           await FirebaseFirestore.instance.collection(tableClients).doc(audit.clientId).update({
             "lastAudit": audit.date,
@@ -125,27 +134,34 @@ class NetworkRepository {
             "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
           });
         }
-      } catch(e) {}
+      } catch(e) {
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
+      }
     }
   }
 
   static Future<void> syncReviews(NetworkCubit network) async {
     var reviews = await LocalStorage().getAllReviews();
     for(var review in reviews) {
+      var network = BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!);
+      if(network.state != ConnectivityResult.wifi) return;
+
+      BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Синхронизація огляду ${review.id}");
      try {
        var clientId = review.clientId;
        if(isCacheId(clientId))
          clientId = toFirebaseId(clientId);
 
+       BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Збереження огляду ${review.id}");
        await ReviewRepository.addReview(review, clientId);
+       BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Видалення огляду ${review.id}");
        await LocalStorage().removeReview(review);
 
        if(network.state == ConnectivityResult.none) {
-         BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).emit(Sync.AWAIT);
          break;
        }
      } catch(e) {
-       print(e);
+       BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
      }
     }
   }
@@ -154,18 +170,23 @@ class NetworkRepository {
     var clients = await LocalStorage().getClients();
 
     for(var client in clients) {
+      var network = BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!);
+      if(network.state != ConnectivityResult.wifi) return;
+
       try {
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Синхронизація клієнту ${client.name}");
         var oldId = client.id;
         client.id = client.id.split("_")[0];
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Збереження клієнту ${client.name}");
         await ClientsRepository.createClient(client);
         client.id = oldId;
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("Видалення клієнту ${client.name}");
         await LocalStorage().removeClient(client);
         if(network.state == ConnectivityResult.none) {
-          BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).emit(Sync.AWAIT);
           break;
         }
       } catch(e) {
-        print(e);
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
       }
     }
 
@@ -175,12 +196,12 @@ class NetworkRepository {
         var localClients = await LocalStorage().getClientsPreview();
         clients.addAll(localClients);
       } catch(e) {
-        print("e $e");
+        BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
       }
 
       BlocProvider.of<ClientsCubit>(navigatorKey.currentContext!).set(clients);
     } catch(e) {
-      print("init clients error: $e");
+      BlocProvider.of<SyncCubit>(navigatorKey.currentContext!).set("$e");
     }
   }
 }

@@ -106,6 +106,13 @@ class LocalStorage {
     removePotentials(client.id);
   }
 
+  Future<void> removeClientById(String id) async {
+    await clientStorage.removeClientById(id);
+    removeContactPeoples(id);
+    removeInventories(id);
+    removePotentials(id);
+  }
+
   Future<void> removeClients(List<ClientFull> clients) async {
     await clientStorage.removeClients(clients);
     for(var client in clients) {
@@ -249,7 +256,6 @@ class LocalStorage {
   Future<AuditData> addAuditData(AuditData data) async {
     return auditDataStorage.addAuditData(data);
   }
-
 
   Future<void> deleteAuditData(String auditId) async {
     await auditDataStorage.deleteAuditData(auditId);

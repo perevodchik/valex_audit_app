@@ -121,6 +121,7 @@ class _State extends State<NewClientScreen> {
                             Container(
                                 child: ListView.separated(
                                     shrinkWrap: true,
+                                    physics: BouncingScrollPhysics(),
                                     itemCount: inventoryItems.length,
                                     itemBuilder: (_, i) => Dismissible(
                                         key: Key(inventoryItems[i].id),

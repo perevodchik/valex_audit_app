@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:valex_agro_audit_app/All.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ClientPreviewWidget extends StatefulWidget {
   final ClientPreview client;
-  ClientPreviewWidget(this.client);
+  final Function? onDelete;
+  ClientPreviewWidget(this.client, {this.onDelete});
   @override
   State<StatefulWidget> createState() => _State();
 }
@@ -41,35 +43,51 @@ class _State extends State<ClientPreviewWidget> {
                             style: styleBoldP20.copyWith(color: Colors.black),
                             duration: Duration(milliseconds: 500)
                         ),
-                        PopupMenuButton<String>(
-                            elevation: 5,
-                            padding: EdgeInsets.zero,
-                            onSelected: (s) async {
-                              switch (s) {
-                                case "edit":
-                                    goToNamed(Routes.editClient, {
-                                      "client": widget.client
-                                    });
-                                    break;
-                                case "audits":
-                                    goToNamed(Routes.auditListClient, {
-                                      "client": await ClientsRepository.getClientById(widget.client.id)
-                                    });
-                                    break;
-                                case "start_audit":
-                                    goToNamed(Routes.auditClient, {
-                                      "client": widget.client
-                                    });
-                                    break;
-                              }
-                            },
-                            itemBuilder: (BuildContext context) {
-                            return {"edit", "audits", "start_audit"}.map((String choice) {
-                              return PopupMenuItem<String> (
-                                value: choice,
-                                child: Text(choice.tr()),
-                              );
-                            }).toList();
+                        BlocBuilder<UserCubit, User?>(
+                          builder: (_, state) {
+                            return PopupMenuButton<String>(
+                                elevation: 5,
+                                padding: EdgeInsets.zero,
+                                onSelected: (s) async {
+                                  switch (s) {
+                                    case "edit":
+                                      goToNamed(Routes.editClient, {
+                                        "client": widget.client
+                                      });
+                                      break;
+                                    case "audits":
+                                      goToNamed(Routes.auditListClient, {
+                                        "client": await ClientsRepository.getClientById(widget.client.id)
+                                      });
+                                      break;
+                                    case "start_audit":
+                                      goToNamed(Routes.auditClient, {
+                                        "client": widget.client
+                                      });
+                                      break;
+                                    case "delete":
+                                      await showModal(ModalAcceptClientDelete(widget.client, onDelete: widget.onDelete));
+                                      break;
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) {
+                                  var items = <String> [
+                                    if(state?.canEdit == true)
+                                      "edit",
+                                    "audits",
+                                    if(state?.canCreate == true)
+                                      "start_audit",
+                                    if(state?.canDelete == true)
+                                      "delete"
+                                  ];
+                                  return items.map((String choice) {
+                                    return PopupMenuItem<String> (
+                                      value: choice,
+                                      child: Text(choice.tr()),
+                                    );
+                                  }).toList();
+                                }
+                            );
                           }
                         )
                       ]

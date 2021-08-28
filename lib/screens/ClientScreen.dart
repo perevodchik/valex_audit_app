@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, EventList;
 import 'package:easy_localization/easy_localization.dart';
@@ -85,14 +88,21 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
           elevation: 0,
           backgroundColor: blueAccent,
           actions: [
-            Icon(Icons.edit, color: Colors.white).onClick(() async {
-              await goToNamed(Routes.editClient, {"client": clientPreview});
-              if(clientPreview!.isCached) {
-                client = await LocalStorage().getClient(clientPreview!.id);
-              } else
-                client = await ClientsRepository.getClientById(clientPreview?.id ?? "123");
-              setState(() {});
-            }).marginSymmetricWidget(horizontal: blockX * 3)
+            BlocBuilder<UserCubit, User?>(
+              builder: (_, state) {
+                print(state);
+                if(state?.canEdit != true)
+                  return Container();
+                return Icon(Icons.edit, color: Colors.white).onClick(() async {
+                  await goToNamed(Routes.editClient, {"client": clientPreview});
+                  if(clientPreview!.isCached) {
+                    client = await LocalStorage().getClient(clientPreview!.id);
+                  } else
+                    client = await ClientsRepository.getClientById(clientPreview?.id ?? "123");
+                  setState(() {});
+                }).marginSymmetricWidget(horizontal: blockX * 3);
+              }
+            )
           ]
       );
     if(tabBar == null)
@@ -108,7 +118,6 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
           Tab(text: "client_contact_peoples".tr(), icon: Icon(Icons.contact_phone_outlined))
         ]
     );
-    print(client?.countPC);
     return Scaffold(
       appBar: appBar,
       body: CustomScrollView(
@@ -201,17 +210,23 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
                                         })),
                                     separatorBuilder: (_, i) => Container(height: 10)
                                 ),
-                                AppElevatedButton(Text("review_add".tr()), onPressed: () async {
-                                  var newReview = await goToNamed(Routes.reviewClient, {
-                                    "date": selectedDate,
-                                    "client": client
-                                  });
-                                  if(newReview != null) {
-                                    if(newReview is ClientReview) {
-                                      load();
+                                BlocBuilder<UserCubit, User?>(
+                                    builder: (_, state) {
+                                      if(state?.canCreate != true)
+                                        return Container();
+                                      return AppElevatedButton(Text("review_add".tr()), onPressed: () async {
+                                        var newReview = await goToNamed(Routes.reviewClient, {
+                                          "date": selectedDate,
+                                          "client": client
+                                        });
+                                        if(newReview != null) {
+                                          if(newReview is ClientReview) {
+                                            load();
+                                          }
+                                        }
+                                      }, shadow: false).width(width).marginSymmetricWidget(horizontal: margin5X);
                                     }
-                                  }
-                                }, shadow: false).width(width).marginSymmetricWidget(horizontal: margin5X)
+                                )
                               ]
                             )
                         ).scrollWidget(),
@@ -236,7 +251,7 @@ class _State extends State<ClientScreen> with SingleTickerProviderStateMixin {
                             ).marginSymmetricWidget(vertical: blockY * 2.5)
                         ).scrollWidget()
                       ]
-                  ).height(height - (appBar?.preferredSize.height ?? 0) - (tabBar?.preferredSize.height ?? 0) * 2)
+                  ).height(height - (appBar?.preferredSize.height ?? 0) - (tabBar?.preferredSize.height ?? 0) * (Platform.isAndroid ? 1.35 : 2))
                 ]
             )
           )

@@ -14,7 +14,7 @@ Future<dynamic> showModal(Widget modal) async {
 
 extension Widgets on Widget {
   Widget safe() => SafeArea(child: this);
-  Widget material() => Material(child: this);
+  Widget material({Color color = Colors.white}) => Material(child: this, color: color);
   Widget expanded({int flex = 1}) => Expanded(child: this, flex: flex);
   Widget center() => Center(child: this);
   Widget flexible() => Flexible(child: this);

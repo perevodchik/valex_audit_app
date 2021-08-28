@@ -70,12 +70,15 @@ class ClientStorage {
       "count_pc": client.countPC,
       "count_cow": client.countCow
     }, where: "id = ?", whereArgs: [client.id]);
-    print("update cluent ${client.id} $r");
     return client;
   }
 
   Future<void> removeClient(ClientFull client) async {
     await AppDatabase.database?.delete("clients", where: "id = ?", whereArgs: [client.id]);
+  }
+
+  Future<void> removeClientById(String id) async {
+    await AppDatabase.database?.delete("clients", where: "id = ?", whereArgs: [id]);
   }
 
   Future<void> removeClients(List<ClientFull> clients) async {

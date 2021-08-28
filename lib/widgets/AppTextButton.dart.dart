@@ -5,9 +5,10 @@ class AppTextButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget child;
   final Color? color;
+  final Color? splash;
   final int? borderRadius;
 
-  AppTextButton(this.child, {this.onPressed, this.color, this.borderRadius});
+  AppTextButton(this.child, {this.onPressed, this.color, this.splash, this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,8 @@ class AppTextButton extends StatelessWidget {
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(borderRadius?.toDouble() ?? 14)
                   )
-              )
+              ),
+            overlayColor: MaterialStateProperty.resolveWith((states) => splash)
           )
       )
     );

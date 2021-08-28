@@ -2,6 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:valex_agro_audit_app/All.dart';
 
 class ClientsRepository {
+
+  static Future<void> removeClientById(String clientId) async {
+    var audits = await AuditRepository.getAuditList(clientId);
+    for(var auditId in audits)
+      await AuditRepository.removeAudit(clientId, auditId);
+    await FirebaseFirestore
+        .instance
+        .collection(tableClients)
+        .doc(clientId)
+        .delete();
+    await FirebaseFirestore
+        .instance
+        .collection(tableClientsShort)
+        .doc(clientId)
+        .delete();
+  }
+
   static Future<void> updateClient(ClientFull client) async {
     await FirebaseFirestore
         .instance

@@ -172,6 +172,7 @@ class _State extends State<EditClientScreen> {
                               Container(
                                   child: ListView.separated(
                                       shrinkWrap: true,
+                                      physics: BouncingScrollPhysics(),
                                       itemCount: inventoryItems.length,
                                       itemBuilder: (_, i) {
                                         if(inventoryItems[i].isNeedDelete)

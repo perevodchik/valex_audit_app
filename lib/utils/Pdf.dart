@@ -97,21 +97,6 @@ Future<dynamic> createPdf(ClientAudit audit, bool imagesFromNetwork, {String com
               },
               data: audit.data.map<List<String>>((d) => [d.title.tr(), d.value, d.additional]).toList()
           )
-          // pw.Table(
-          //   children: [
-          //     pw.TableRow(
-          //       children: [
-          //
-          //         // pw.Column(
-          //         //     children: [
-          //         //       pw.Container(height: 10),
-          //         //
-          //         //     ]
-          //         // )
-          //       ]
-          //     )
-          //   ]
-          // )
         ]; // Center
       }));
 
@@ -121,9 +106,9 @@ Future<dynamic> createPdf(ClientAudit audit, bool imagesFromNetwork, {String com
 
   try {
     await generateRows(rows0, audit, "audit_0", alert, warning, perfect, style, imagesFromNetwork);
-    rows0.add(pw.TableRow(children: [
-      pw.Container(height: 50)
-    ]));
+    // rows0.add(pw.TableRow(children: [
+    //   pw.Container(height: 50)
+    // ]));
   } catch(e) {
     Fluttertoast.showToast(
         msg: "$e",
@@ -137,9 +122,9 @@ Future<dynamic> createPdf(ClientAudit audit, bool imagesFromNetwork, {String com
   }
   try {
     await generateRows(rows1, audit, "audit_1", alert, warning, perfect, style, imagesFromNetwork);
-    rows1.add(pw.TableRow(children: [
-      pw.Container(height: 50)
-    ]));
+    // rows1.add(pw.TableRow(children: [
+    //   pw.Container(height: 50)
+    // ]));
   } catch(e) {
     Fluttertoast.showToast(
         msg: "$e",
@@ -202,15 +187,10 @@ Future<dynamic> createPdf(ClientAudit audit, bool imagesFromNetwork, {String com
   ));
 
   if(wrapChildren.isNotEmpty) {
-  // if(rows.isNotEmpty) {
     var p = pw.MultiPage(
         maxPages: 100,
         pageFormat: PdfPageFormat.a4,
         build: (pw.Context c) => [
-          // table
-          // pw.Table(
-          //     children: rows
-          // )
         ]
     );
     pdf.addPage(p);
@@ -430,7 +410,7 @@ Future<void> generateRows(List<pw.TableRow> rows, ClientAudit audit, String audi
         t.children[1].children[0] = pw.Container(
             padding: pw.EdgeInsets.all(5),
             child: pw.Center(
-                child: pw.Text(q.question.tr(), textAlign: pw.TextAlign.center)
+                child: pw.Text(q.question.tr(), style: pw.TextStyle(fontSize: 12), textAlign: pw.TextAlign.center)
             )
         );
         t.children[1].children[1] = pw.Container(
@@ -442,7 +422,7 @@ Future<void> generateRows(List<pw.TableRow> rows, ClientAudit audit, String audi
         t.children[1].children[3] = pw.Container(
             padding: pw.EdgeInsets.all(5),
             child: pw.Center(
-                child: pw.Text(q.rateParam, style: pw.TextStyle(fontSize: 12))
+                child: pw.Text(q.rateParam, style: pw.TextStyle(fontSize: 10))
             )
         );
         t.children[1].children[2] = pw.Container(
@@ -461,18 +441,18 @@ Future<void> generateRows(List<pw.TableRow> rows, ClientAudit audit, String audi
               var response = await http.get(Uri.parse(src));
               var bytes = response.bodyBytes;
               final image = pw.MemoryImage(bytes);
-              photoImage = pw.Image(image, height: 100, width: 100);
+              photoImage = pw.Image(image, height: 100, width: 125);
             }
           }
           else {
             if((q.photosSrc ?? []).isNotEmpty) {
               var src = q.photosSrc!.first;
               final image = pw.MemoryImage(File(src).readAsBytesSync());
-              photoImage = pw.Image(image, height: 100, width: 100);
+              photoImage = pw.Image(image, height: 100, width: 125);
             } else if((q.photos ?? []).isNotEmpty) {
               var src = q.photos!.first;
               final image = pw.MemoryImage(src.readAsBytesSync());
-              photoImage = pw.Image(image, height: 100, width: 100);
+              photoImage = pw.Image(image, height: 100, width: 125);
             }
           }
         } catch(e) {
@@ -498,9 +478,5 @@ Future<void> generateRows(List<pw.TableRow> rows, ClientAudit audit, String audi
       }
       rows.add(pw.TableRow(children: [t]));
     }
-    if(addBottomMargin)
-      rows.add(pw.TableRow(children: [
-        pw.Container(height: 10)
-      ]));
   }
 }

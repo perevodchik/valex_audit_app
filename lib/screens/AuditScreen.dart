@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,13 +60,117 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
     } else {
       audit = await AuditRepository.getAudit(audit!.id, audit!.clientId);
     }
-    setState(() {});
+    if(mounted)
+      setState(() {});
+  }
+
+  Future<void> generatePdf() async {
+    if(isLoading) return;
+    setState(() => isLoading = true);
+    try {
+      await NetworkRepository.refreshNetworkStatus();
+      if(BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!).state != ConnectivityResult.none) {
+        if(!(audit?.isSaved ?? true)) {
+          audit?.isSaved = true;
+          await FirebaseFirestore
+              .instance
+              .collection(tableClients)
+              .doc(audit!.clientId)
+              .collection(tableAudits)
+              .doc(audit!.id)
+              .update({
+            "isSaved": true
+          });
+          await FirebaseFirestore
+              .instance
+              .collection(tableClients)
+              .doc(audit!.clientId)
+              .collection(tableAuditsShort)
+              .doc(audit!.id)
+              .update({
+            "isSaved": true
+          });
+
+          await FirebaseFirestore
+              .instance
+              .collection(tableClientsShort)
+              .doc(audit!.clientId)
+              .collection(tableAudits)
+              .doc(audit!.id)
+              .update({
+            "isSaved": true
+          });
+          await FirebaseFirestore
+              .instance
+              .collection(tableClientsShort)
+              .doc(audit!.clientId)
+              .collection(tableAuditsShort)
+              .doc(audit!.id)
+              .update({
+            "isSaved": true
+          });
+          audit?.isSaved = true;
+        }
+        var client = await ClientsShortRepository.getClient(audit!.clientId);
+        if(client?.lastAudit == null || client!.lastAudit!.millisecondsSinceEpoch < audit!.date.millisecondsSinceEpoch) {
+          BlocProvider.of<ClientsCubit>(context).updateClientLastAudit(audit!.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit!.date);
+          await FirebaseFirestore.instance.collection(tableClients).doc(audit!.clientId).update({
+            "lastAudit": audit!.date,
+            "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+          });
+          await FirebaseFirestore.instance.collection(tableClientsShort).doc(audit!.clientId).update({
+            "lastAudit": audit!.date,
+            "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
+          });
+        }
+
+        try {
+          var file = await createPdf(audit!, true, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
+          Navigator.push(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfFileViewPage(file, audit!)));
+        } catch(e) {
+          Fluttertoast.showToast(
+              msg: "$e",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
+      } else
+        try {
+          FocusScope.of(context).unfocus();
+          var file = await createPdf(audit!, false, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
+          Navigator.push(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfFileViewPage(file, audit!)));
+        } catch(e) {
+          Fluttertoast.showToast(
+              msg: "$e",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+        }
+    } catch(e) {
+      Fluttertoast.showToast(
+          msg: "$e",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      print("error: $e");
+    }
+    setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(utf8.decode([208, 146, 208, 187, 208, 176, 208, 180, 209, 150, 208, 186]));
-    print(utf8.encode("Владік"));
     return Scaffold(
         appBar: AppBar(
             title: Text("client_audit".tr()),
@@ -77,9 +180,14 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
             brightness: Brightness.dark,
             actions: <Widget>[
               IconButton(
+                icon: Icon(Icons.picture_as_pdf),
+                onPressed: () async => await generatePdf()
+              ),
+              IconButton(
                   icon: Icon(Icons.add_to_drive_outlined),
                   onPressed:() async {
-                    progressDialog();
+                    print("audit ${audit?.isSaved}");
+                    // progressDialog();
                     try {
                       if(pdfFile == null)
                         pdfFile = await createPdf(
@@ -88,6 +196,48 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                             company: BlocProvider.of<UserCubit>(context).state?.company ?? "",
                             manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
                       await uploadFileToDrive(pdfFile!, audit?.user ?? "admin", audit?.address ?? "address", audit?.date ?? DateTime.now());
+                      print("audit ${audit?.isSaved}");
+                      if(!(audit?.isSaved ?? true)) {
+                        audit?.isSaved = true;
+                        await FirebaseFirestore
+                            .instance
+                            .collection(tableClients)
+                            .doc(audit!.clientId)
+                            .collection(tableAudits)
+                            .doc(audit!.id)
+                            .update({
+                          "isSaved": true
+                        });
+                        await FirebaseFirestore
+                            .instance
+                            .collection(tableClients)
+                            .doc(audit!.clientId)
+                            .collection(tableAuditsShort)
+                            .doc(audit!.id)
+                            .update({
+                          "isSaved": true
+                        });
+
+                        await FirebaseFirestore
+                            .instance
+                            .collection(tableClientsShort)
+                            .doc(audit!.clientId)
+                            .collection(tableAudits)
+                            .doc(audit!.id)
+                            .update({
+                          "isSaved": true
+                        });
+                        await FirebaseFirestore
+                            .instance
+                            .collection(tableClientsShort)
+                            .doc(audit!.clientId)
+                            .collection(tableAuditsShort)
+                            .doc(audit!.id)
+                            .update({
+                          "isSaved": true
+                        });
+                        audit?.isSaved = true;
+                      }
                     } catch(e) { print("$e"); }
                     Navigator.pop(context);
                   }
@@ -116,7 +266,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                                 Text("main_info".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY ),
                                 Wrap(
                                     runSpacing: blockY,
-                                    children: (audit?.data ?? []).map<Widget>((data) => AuditDataItem(data, isEditable: false).marginSymmetricWidget(horizontal: margin5X)).toList()
+                                    children: (audit?.data ?? []).map<Widget>((data) => AuditDataItem(data, isEditable: true).marginSymmetricWidget(horizontal: margin5X)).toList()
                                 )
                               ]
                           ).scrollWidget(),
@@ -125,6 +275,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                               children: [
                                 Text("audit_0".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                                 ListView.separated(
+                                    physics: BouncingScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: false,
                                     itemCount: (audit?.auditQuestions["audit_0"] ?? {}).entries.length,
@@ -153,7 +304,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                                           children: [
                                             Wrap(
                                                 runSpacing: blockY,
-                                                children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: false, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
+                                                children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: true, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
                                             )
                                           ]
                                       ).scrollWidget();
@@ -166,6 +317,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                               children: [
                                 Text("audit_1".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                                 ListView.separated(
+                                    physics: BouncingScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: false,
                                     itemCount: (audit?.auditQuestions["audit_1"] ?? {}).entries.length,
@@ -193,7 +345,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                                         children: [
                                           Wrap(
                                               runSpacing: blockY,
-                                              children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: false, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
+                                              children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: true, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
                                           )
                                         ]
                                     ).scrollWidget()).toList()
@@ -205,6 +357,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                               children: [
                                 Text("audit_2".tr(), style: styleBoldP20).marginSymmetricWidget(horizontal: margin5X, vertical: blockY),
                                 ListView.separated(
+                                    physics: BouncingScrollPhysics(),
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: false,
                                     itemCount: (audit?.auditQuestions["audit_2"] ?? {}).entries.length,
@@ -232,7 +385,7 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                                         children: [
                                           Wrap(
                                               runSpacing: blockY,
-                                              children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: false, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
+                                              children: e.value.map<Widget>((v) => AuditQuestionItem(v, isEditable: true, isCached: audit?.isCached ?? true).marginSymmetricWidget(horizontal: margin5X)).toList()
                                           )
                                         ]
                                     ).scrollWidget()).toList()
@@ -249,110 +402,20 @@ class _State extends State<AuditScreen> with SingleTickerProviderStateMixin {
                           ) : Container()).expanded(),
                           Container(width: 20),
                           AppElevatedButton(
-                              Text(currentPage < 3 ? "next".tr() : "generate_pdf".tr(), style: styleBoldP14.copyWith(color: Colors.white)),
+                              Text(currentPage < 3 ? "next".tr() : "save".tr(), style: styleBoldP14.copyWith(color: Colors.white)),
                               onPressed: () async {
                                 if(currentPage == 3) {
-                                  if(isLoading) return;
+                                  var a = audit!;
+                                  print("cached? ${a.id} ${a.clientId} ${a.isCached}");
                                   setState(() => isLoading = true);
-                                  try {
-                                    await NetworkRepository.refreshNetworkStatus();
-                                    if(BlocProvider.of<NetworkCubit>(navigatorKey.currentContext!).state != ConnectivityResult.none) {
-                                      print("${audit?.isSaved}");
-                                      if(!(audit?.isSaved ?? true)) {
-                                        audit?.isSaved = true;
-                                        await FirebaseFirestore
-                                            .instance
-                                            .collection(tableClients)
-                                            .doc(audit!.clientId)
-                                            .collection(tableAudits)
-                                            .doc(audit!.id)
-                                            .update({
-                                              "isSaved": true
-                                            });
-                                        await FirebaseFirestore
-                                            .instance
-                                            .collection(tableClients)
-                                            .doc(audit!.clientId)
-                                            .collection(tableAuditsShort)
-                                            .doc(audit!.id)
-                                            .update({
-                                              "isSaved": true
-                                            });
-
-                                        print("update short data");
-                                        await FirebaseFirestore
-                                            .instance
-                                            .collection(tableClientsShort)
-                                            .doc(audit!.clientId)
-                                            .collection(tableAudits)
-                                            .doc(audit!.id)
-                                            .update({
-                                              "isSaved": true
-                                            });
-                                        await FirebaseFirestore
-                                            .instance
-                                            .collection(tableClientsShort)
-                                            .doc(audit!.clientId)
-                                            .collection(tableAuditsShort)
-                                            .doc(audit!.id)
-                                            .update({
-                                              "isSaved": true
-                                            });
-                                      }
-                                      var client = await ClientsShortRepository.getClient(audit!.clientId);
-                                      if(client?.lastAudit == null || client!.lastAudit!.millisecondsSinceEpoch < audit!.date.millisecondsSinceEpoch) {
-                                        BlocProvider.of<ClientsCubit>(context).updateClientLastAudit(audit!.clientId, BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? "", audit!.date);
-                                        await FirebaseFirestore.instance.collection(tableClients).doc(audit!.clientId).update({
-                                          "lastAudit": audit!.date,
-                                          "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
-                                        });
-                                        await FirebaseFirestore.instance.collection(tableClientsShort).doc(audit!.clientId).update({
-                                          "lastAudit": audit!.date,
-                                          "userLastAudit": BlocProvider.of<UserCubit>(navigatorKey.currentContext!).state?.name ?? ""
-                                        });
-                                      }
-
-                                      try {
-                                        var file = await createPdf(audit!, true, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
-                                        Navigator.push(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
-                                      } catch(e) {
-                                        Fluttertoast.showToast(
-                                            msg: "$e",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.CENTER,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.red,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0
-                                        );
-                                      }
-                                    } else
-                                      try {
-                                        FocusScope.of(context).unfocus();
-                                        var file = await createPdf(audit!, false, company: BlocProvider.of<UserCubit>(context).state?.company ?? "", manager: BlocProvider.of<UserCubit>(context).state?.name ?? "");
-                                        Navigator.push(navigatorKey.currentContext!, CupertinoPageRoute(builder: (_) =>  PdfViewPage(file, audit!)));
-                                    } catch(e) {
-                                        Fluttertoast.showToast(
-                                            msg: "$e",
-                                            toastLength: Toast.LENGTH_SHORT,
-                                            gravity: ToastGravity.CENTER,
-                                            timeInSecForIosWeb: 1,
-                                            backgroundColor: Colors.red,
-                                            textColor: Colors.white,
-                                            fontSize: 16.0
-                                        );
-                                      }
-                                  } catch(e) {
-                                    Fluttertoast.showToast(
-                                        msg: "$e",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.red,
-                                        textColor: Colors.white,
-                                        fontSize: 16.0
-                                    );
-                                    print("error: $e");
+                                  if(a.isCached) {
+                                    await LocalStorage().removeAudit(a);
+                                    await LocalStorage().deleteAuditData(a.id);
+                                    await LocalStorage().deleteAuditQuestion(a.id);
+                                    await LocalStorage().addAudit(a);
+                                  } else {
+                                    await AuditRepository.removeAudit(a.clientId, a.id);
+                                    await AuditRepository.updateAudit(a);
                                   }
                                   setState(() => isLoading = false);
                                 }

@@ -12,6 +12,7 @@ class ClientAuditQuestion {
   String secondRate;
   bool withRate;
   bool withSelector;
+  bool isChangePhoto;
   List<File>? photos;
   List<String>? photosSrc;
 
@@ -27,6 +28,7 @@ class ClientAuditQuestion {
         this.secondRate = "",
         this.withRate = true,
         this.withSelector = true,
+        this.isChangePhoto = false,
         this.photos,
         this.photosSrc});
 
