@@ -17,31 +17,35 @@ class _State extends State<AppRoundedDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        minHeight: 30,
+        maxHeight: 200
+      ),
       padding: EdgeInsets.symmetric(vertical: blockY * 1.5, horizontal: margin5X / 2),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: greyMedium),
         borderRadius: BorderRadius.circular(10)
       ),
-      child: DropdownButton<String>(
-          style: styleBoldP14.copyWith(color: blueDark, fontFamily: "Arial"),
-          underline: Container(),
-          icon: Container(),
-          hint: Text("dropdown_select_value".tr()),
-          isDense: true,
-          isExpanded: true,
-          items: widget.items.map((String value) {
-            return new DropdownMenuItem<String>(
-                value: value,
-                child: Container(
-                  // margin: EdgeInsets.symmetric(vertical: 5),
-                  child: Text(value)
-                )
-            );
-          }).toList(),
-          value: widget.selected.isEmpty ? null : widget.selected,
-          onChanged: widget.onChanged
-      ).width(width)
+      child: IntrinsicHeight(
+          child: DropdownButton<String>(
+              style: styleBoldP14.copyWith(color: blueDark, fontFamily: "Arial"),
+              underline: Container(),
+              icon: Container(),
+              hint: Text("dropdown_select_value".tr()),
+              isExpanded: true,
+              items: widget.items.map((String value) {
+                return new DropdownMenuItem<String>(
+                    value: value,
+                    child: Container(
+                        child: Text(value)
+                    )
+                );
+              }).toList(),
+              value: widget.selected.isEmpty ? null : widget.selected,
+              onChanged: widget.onChanged
+          ).width(width)
+      )
     );
   }
 }

@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -433,47 +433,61 @@ Future<void> generateRows(List<pw.TableRow> rows, ClientAudit audit, String audi
         );
 
         var photoColumnIndex = q.withRate && !q.withSelector ? 4 : (!q.withRate && !q.withSelector ? 3 : 5);
+        var photoImages = <pw.Widget> [];
         pw.Image? photoImage;
-        try {
-          if(imagesFromNetwork) {
-            if((q.photosSrc ?? []).isNotEmpty) {
-              var src = q.photosSrc!.first;
-              var response = await http.get(Uri.parse(src));
-              var bytes = response.bodyBytes;
-              final image = pw.MemoryImage(bytes);
-              photoImage = pw.Image(image, height: 100, width: 125);
+
+        for(var src in (q.photosSrc ?? [])) {
+
+          try {
+            print("add photoImage from photosSrc with network $imagesFromNetwork => $src");
+            if(imagesFromNetwork) {
+              if(src.contains("https://firebasestorage.googleapis.com:")) {
+                var response = await http.get(Uri.parse(src));
+                var bytes = response.bodyBytes;
+                final image = pw.MemoryImage(bytes);
+                photoImage = pw.Image(image, height: 100, width: 125);
+              } else {
+                var src1 = await FirebaseStorage.instance.ref(src).getDownloadURL();
+                var response = await http.get(Uri.parse(src1));
+                var bytes = response.bodyBytes;
+                final image = pw.MemoryImage(bytes);
+                photoImage = pw.Image(image, height: 100, width: 125);
+              }
             }
-          }
-          else {
-            if((q.photosSrc ?? []).isNotEmpty) {
-              var src = q.photosSrc!.first;
+            else {
               final image = pw.MemoryImage(File(src).readAsBytesSync());
               photoImage = pw.Image(image, height: 100, width: 125);
-            } else if((q.photos ?? []).isNotEmpty) {
-              var src = q.photos!.first;
-              final image = pw.MemoryImage(src.readAsBytesSync());
-              photoImage = pw.Image(image, height: 100, width: 125);
             }
+            photoImages.add(photoImage);
+          } catch(e) {
+            Fluttertoast.showToast(
+                msg: "$e",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
+            print("error ${q.question} => $e");
           }
-        } catch(e) {
-          Fluttertoast.showToast(
-              msg: "$e",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-          print("error ${q.question} => $e");
+
         }
 
-        if(photoImage != null) {
-          t.children[1].children[photoColumnIndex] = pw.Container(
-              child: pw.Center(
-                  child: photoImage
-              )
+        if(photoImages.isNotEmpty) {
+          t.children[1].children[photoColumnIndex] = pw.Column(
+            children: photoImages
+            // children: [
+            //   pw.Center(
+            //     child: photoImage
+            //   )
+            // ]
           );
+          // t.children[1].children[photoColumnIndex] = pw.Container(
+          //     child: pw.Center(
+          //         child: photoImage
+          //     )
+          // );
         }
       }
       rows.add(pw.TableRow(children: [t]));

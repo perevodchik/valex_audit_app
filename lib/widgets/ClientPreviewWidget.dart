@@ -13,7 +13,7 @@ class ClientPreviewWidget extends StatefulWidget {
 }
 
 class _State extends State<ClientPreviewWidget> {
-  final DateFormat dateFormat = DateFormat('hh:mm dd.MM.yyyy');
+  final DateFormat dateFormat = DateFormat('HH:mm dd.MM.yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,13 @@ class _State extends State<ClientPreviewWidget> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        AnimatedDefaultTextStyle(
-                            child: Text(widget.client.name ?? ""),
-                            style: styleBoldP20.copyWith(color: Colors.black),
-                            duration: Duration(milliseconds: 500)
+                        Container(
+                          width: width * .7,
+                          child: AnimatedDefaultTextStyle(
+                              child: Text(widget.client.name ?? "", maxLines: 2),
+                              style: styleBoldP16.copyWith(color: Colors.black),
+                              duration: Duration(milliseconds: 500),
+                          )
                         ),
                         BlocBuilder<UserCubit, User?>(
                           builder: (_, state) {

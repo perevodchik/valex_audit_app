@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:valex_agro_audit_app/All.dart';
 import 'package:valex_agro_audit_app/repository/storage/Storage.dart';
 
@@ -219,9 +221,9 @@ class LocalStorage {
       for(var entry in e.value.entries) {
         for(var question in entry.value) {
           int c = 0;
-          for(var file in question.photos ?? []) {
+          for(var file in question.photos ?? <File>[]) {
             var fileName = "${audit.id}_${question.question}_${c++}.jpg";
-            var f = await saveFileInTmpDir(file, fileName);
+            var f = await saveFileInTmpDir(await file.readAsBytes(), fileName);
             if(f != null) {
               question.photosSrc?.add(f.path);
             }

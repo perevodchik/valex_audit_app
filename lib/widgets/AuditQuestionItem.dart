@@ -21,8 +21,10 @@ class AuditQuestionItem extends StatefulWidget {
 
 class _State extends State<AuditQuestionItem> {
   TextEditingController? firstRate, secondRate, question, rateParam, comment;
+  List<String> rates = ["1", "2", "3"];
   List<String> questions = [];
   String currentQuestion = "";
+  String currentRate = "";
   Widget leading = Container();
 
   @override
@@ -33,7 +35,15 @@ class _State extends State<AuditQuestionItem> {
     rateParam = TextEditingController(text: widget.data.rateParam);
     comment = TextEditingController(text: widget.data.comment);
 
-    var v = int.tryParse(widget.data.firstRate.toString()) ?? 1;
+    var r = widget.data.firstRate.toString();
+    
+    for(var rate in rates) {
+      if(r == rate) {
+        currentRate = rate;
+      }
+    }
+    
+    var v = int.tryParse(r) ?? 1;
     if(v == 3)
       leading = SvgPicture.asset("assets/icons/warning.svg", height: 30, width: 30);
     else if(v == 2)
@@ -42,10 +52,12 @@ class _State extends State<AuditQuestionItem> {
       leading = SvgPicture.asset("assets/icons/perfect.svg", height: 30, width: 30);
     else leading = Container(height: 30, width: 30);
 
-    questions.add("");
     questions.add("${widget.data.question}_0".tr());
     questions.add("${widget.data.question}_1".tr());
     questions.add("${widget.data.question}_2".tr());
+    questions.removeWhere((q) => q.isEmpty);
+    questions.insert(0, "");
+
     currentQuestion = questions.first;
     super.initState();
   }
@@ -78,22 +90,21 @@ class _State extends State<AuditQuestionItem> {
               if(widget.data.withRate)
               Row(
                 children: [
-                  CustomRoundedTextField(firstRate, hint: "audit_question_first_rate".tr(), helperText: "audit_question_first_rate".tr(),
-                      formatters: [
-                        FilteringTextInputFormatter(RegExp(r"^[1-3]$"), allow: true, replacementString: "")
-                      ],
-                      onChanged: (r) {
-                        var v = int.tryParse(r) ?? 0;
-                        if(v == 3)
-                          leading = SvgPicture.asset("assets/icons/warning.svg", height: 30, width: 30);
-                        else if(v == 2 || v == 0)
-                          leading = SvgPicture.asset("assets/icons/alert.svg", height: 30, width: 30);
-                        else if(v == 1)
-                          leading = SvgPicture.asset("assets/icons/perfect.svg", height: 30, width: 30);
-                        else leading = Container(height: 30, width: 30);
-                        setState(() {});
-                        widget.data.firstRate = v.toString();
-                      }, isEnable: widget.isEditable).expanded(),
+                  AppRoundedDropdown(
+                      rates,
+                      currentRate,
+                          (r) {
+                            currentRate = r;
+                            var v = int.tryParse(currentRate) ?? 0;
+                            if(v == 3)
+                              leading = SvgPicture.asset("assets/icons/warning.svg", height: 30, width: 30);
+                            else if(v == 2 || v == 0)
+                              leading = SvgPicture.asset("assets/icons/alert.svg", height: 30, width: 30);
+                            else if(v == 1)
+                              leading = SvgPicture.asset("assets/icons/perfect.svg", height: 30, width: 30);
+                            else leading = Container(height: 30, width: 30);
+                            setState(() {});
+                      }).expanded(),
                   Container(width: 10),
                   CustomRoundedTextField(secondRate, hint: "", helperText: "",
                       isEnable: false, leading: leading).expanded()
@@ -122,7 +133,8 @@ class _State extends State<AuditQuestionItem> {
                       builder: (_) => ModalImageSourcePicker()
                     );
                     if(r != null) {
-                      widget.data.photos?.clear();
+                      if(widget.data.photos == null)
+                        widget.data.photos = [];
                       setState(() => widget.data.photos?.add(r));
                     }
                   }),
@@ -132,6 +144,7 @@ class _State extends State<AuditQuestionItem> {
                           children: (widget.data.photosSrc ?? []).map<Widget>((s) => Container(
                               height: 100,
                               width: 100,
+                              margin: EdgeInsets.only(left: 24),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image.file(File(s))
@@ -139,12 +152,13 @@ class _State extends State<AuditQuestionItem> {
                           ).onClick(() {
                             showModal(ModalCarouselNetwork(widget.data.photosSrc ?? []));
                           })).toList()
-                      ).scrollWidget()
+                      ).scrollWidget(direction: Axis.horizontal).expanded()
                       else
                       Row(
                           children: (widget.data.photosSrc ?? []).map<Widget>((s) => Container(
                               height: 100,
                               width: 100,
+                              margin: EdgeInsets.only(left: 24),
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: CachedNetworkImage(
@@ -156,12 +170,13 @@ class _State extends State<AuditQuestionItem> {
                           ).onClick(() {
                             showModal(ModalCarouselNetwork(widget.data.photosSrc ?? []));
                           })).toList()
-                      ).scrollWidget()
+                      ).scrollWidget(direction: Axis.horizontal).expanded()
                   else if(widget.data.auditId?.isEmpty ?? true)
                     Row(
                         children: (widget.data.photos ?? []).map<Widget>((f) => Stack(
                             children: [
                               Container(
+                                  margin: EdgeInsets.only(left: 24),
                                   height: 100,
                                   width: 100,
                                   child: ClipRRect(
@@ -178,9 +193,10 @@ class _State extends State<AuditQuestionItem> {
                               )
                             ]
                         )).toList()
-                    ).scrollWidget()
+                    ).scrollWidget(direction: Axis.horizontal).expanded()
                   else Row(
                       children: (widget.data.photos ?? []).map<Widget>((f) => Container(
+                          margin: EdgeInsets.only(left: 24),
                           height: 100,
                           width: 100,
                           child: ClipRRect(
@@ -188,7 +204,7 @@ class _State extends State<AuditQuestionItem> {
                               child: Image.file(f)
                           )
                       )).toList()
-                  ).scrollWidget()
+                  ).scrollWidget(direction: Axis.horizontal).expanded()
                 ]
               )
             ]

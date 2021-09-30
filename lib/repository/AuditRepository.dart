@@ -1,28 +1,68 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../All.dart';
+import 'package:http/http.dart' as http;
 
 class AuditRepository {
 
   static Future<ClientAudit> updateAudit(ClientAudit audit) async {
+
+    print("updateAudit");
     for(var q0 in audit.auditQuestions.entries) {
       for(var q1 in q0.value.entries) {
         for(var question in q1.value) {
-          if(question.isChangePhoto != true)
-            continue;
+          print("${question.rateParam} => ${question.photos}");
           int c = 0;
+          question.photosSrc?.clear();
           for(var photo in question.photos ?? []) {
             var fileName = "${audit.id}/${question.question}_$c.png";
             question.photosSrc?.add(fileName);
+            print(fileName);
             c++;
           }
         }
       }
     }
 
+    // for(var q0 in audit.auditQuestions.entries) {
+    //   for(var q1 in q0.value.entries) {
+    //     for(var question in q1.value) {
+    //       // if(question.isChangePhoto != true)
+    //       //   continue;
+    //
+    //       for(var i = 0; i < (question.photos?.length ?? 0); i++) {
+    //         var fileName = question.photosSrc![i];
+    //         var storageRef = FirebaseStorage
+    //             .instance
+    //             .ref()
+    //             .child("$fileName");
+    //         var file = question.photos![i];
+    //
+    //         // TODO compress
+    //         // print("pre compress ${file.lengthSync()}")
+    //         // var result = await FlutterImageCompress.compressWithFile(
+    //         //     file.absolute.path,
+    //         //     quality: 70
+    //         // );
+    //         // file.writeAsBytes(result!.toList());
+    //         // print("post compress ${file.lengthSync()}");
+    //
+    //         var uploadTask = await storageRef.putFile(file);
+    //         var url = await uploadTask.ref.getDownloadURL();
+    //         try {
+    //           question.photosSrc![i] = url;
+    //         } catch(e) {print("e0 $e");}
+    //         question.photosSrc?.add(fileName);
+    //       }
+    //     }
+    //   }
+    // }
+
     await FirebaseFirestore
         .instance
         .collection(tableClients)
@@ -51,40 +91,6 @@ class AuditRepository {
         .collection(tableAuditsShort)
         .doc(audit.id)
         .set(audit.toJsonShort());
-
-    for(var q0 in audit.auditQuestions.entries) {
-      for(var q1 in q0.value.entries) {
-        for(var question in q1.value) {
-          if(question.isChangePhoto != true)
-            continue;
-
-          for(var i = 0; i < (question.photos?.length ?? 0); i++) {
-            var fileName = question.photosSrc![i];
-            var storageRef = FirebaseStorage
-                .instance
-                .ref()
-                .child("$fileName");
-            var file = question.photos![i];
-
-            // TODO compress
-            // print("pre compress ${file.lengthSync()}")
-            // var result = await FlutterImageCompress.compressWithFile(
-            //     file.absolute.path,
-            //     quality: 70
-            // );
-            // file.writeAsBytes(result!.toList());
-            // print("post compress ${file.lengthSync()}");
-
-            var uploadTask = await storageRef.putFile(file);
-            var url = await uploadTask.ref.getDownloadURL();
-            try {
-              question.photosSrc![i] = url;
-            } catch(e) {print("e0 $e");}
-            question.photosSrc?.add(fileName);
-          }
-        }
-      }
-    }
     return audit;
   }
 
@@ -129,6 +135,7 @@ class AuditRepository {
       for(var q1 in q0.value.entries) {
         for(var question in q1.value) {
           int c = 0;
+          question.photosSrc?.clear();
           for(var photo in question.photos ?? []) {
             s?.add("Підготовка фото: $countPhotos");
             countPhotos++;
@@ -275,16 +282,27 @@ class AuditRepository {
       for(var q0 in q1.value.entries) {
         for(var question in q0.value) {
           for(var p = 0; p < question.photosSrc!.length; p++) {
+            print("check ${question.photosSrc![p]} for ${question.rateParam}");
             try {
               if(question.photosSrc![p].isEmpty) continue;
-              var storageRef = FirebaseStorage
-                  .instance
-                  .ref()
-                  .child(question.photosSrc![p]);
-              var newPath = await storageRef.getDownloadURL();
-              print("1 ${question.photosSrc![p]}");
-              print("path) $newPath");
-              question.photosSrc![p] = newPath;
+
+              Uint8List? data;
+
+              if(question.photosSrc![p].contains("https://firebasestorage.googleapis.com:")) {
+                var img = await http.get(Uri.parse(question.photosSrc![p]));
+                data = img.bodyBytes;
+              } else {
+                var storageRef = FirebaseStorage
+                    .instance
+                    .ref()
+                    .child(question.photosSrc![p]);
+                data = await storageRef.getData();
+              }
+
+              var f = await saveFileInTmpDir(data!, question.photosSrc![p]);
+              if(question.photos == null)
+                question.photos = <File> [];
+              question.photos?.add(f!);
             } catch(e) {
               print("e $e");
             }

@@ -30,11 +30,11 @@ class _State extends State<SplashScreen> {
       if(user.id == null || user.id!.isEmpty) {
         goToNamed(Routes.signIn, {}, isRemovePreviously: true);
       } else {
-        BlocProvider.of<UserCubit>(context).set(user);
+        BlocProvider.of<UserCubit>(navigatorKey.currentContext!).set(user);
         goToNamed(Routes.main, {}, isRemovePreviously: true);
         UserRepository.getUserById(user.id!).then((value) async {
           if(value != null) {
-            BlocProvider.of<UserCubit>(context).set(value);
+            BlocProvider.of<UserCubit>(navigatorKey.currentContext!).set(value);
             value.toShared(await SharedPreferences.getInstance());
           }
         });

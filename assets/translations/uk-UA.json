@@ -25,6 +25,7 @@
   "accept_client_delete": "Ви дійсно хочете видалити клієнта {} зі всіма його даними?",
   "no_have_permission": "У Вас немає прав для здійснення цієї операції",
   "contact_with_admin": "Звяжіться з адміністратором",
+  "upload_success": "Pdf успішно збережено",
 
   "pdf_revision_point": "Точка перевірки",
   "pdf_rate": "Рейтинг",
@@ -134,6 +135,11 @@
 
 
   "audit_title_milk_system": "Молочна система",
+  "audit_question_doilnij_aparat": "Доїльний апапат",
+  "audit_question_doilnij_aparat_0": "1 - всі функції справні та працюють в автоматичному режимі",
+  "audit_question_doilnij_aparat_1": "2 - не оглядався",
+  "audit_question_doilnij_aparat_2": "3 - не працює будь яка із автоматичних функцій",
+
   "audit_question_molokopryjmach": "Молокоприймач",
   "audit_question_molokopryjmach_0": "1 - чистий зовні та всередині; без слідів забруднення в місцях з'єднання з трубами (ввід молока)",
   "audit_question_molokopryjmach_1": "2 - не оглядався; незначне забруднення зовні; чистий всередині; без слідів забруднення в місцях вводу молока;",

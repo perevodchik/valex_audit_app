@@ -10,16 +10,19 @@ class User {
   bool canCreate;
 
   User({this.id, this.name, this.company, this.rang,
-    this.canDelete = false, this.canEdit = false, this.canCreate = false});
+    this.canDelete = true, this.canEdit = true, this.canCreate = true});
 
   factory User.fromJson(Map<String, dynamic> data) => User(
       id: data["id"] ?? "",
       name: data["name"] ?? "",
       company: data["company"] ?? "",
       rang: data["rang"] ?? "",
-      canDelete: data["canDelete"] ?? false,
-      canEdit: data["canEdit"] ?? false,
-      canCreate: data["canCreate"] ?? false,
+      // canDelete: data["canDelete"] ?? false,
+      canDelete: true,
+      // canEdit: data["canEdit"] ?? false,
+      canEdit: true,
+      // canCreate: data["canCreate"] ?? false,
+      canCreate: true
   );
 
   factory User.fromShared(SharedPreferences s) => User(
@@ -27,9 +30,12 @@ class User {
       name: s.getString("name"),
       company: s.getString("company"),
       rang: s.getString("rang"),
-      canDelete: s.getBool("canDelete") ?? false,
-      canEdit: s.getBool("canEdit") ?? false,
-      canCreate: s.getBool("canCreate") ?? false
+      // canDelete: s.getBool("canDelete") ?? false,
+      canDelete: true,
+      // canEdit: s.getBool("canEdit") ?? false,
+      canEdit: true,
+      // canCreate: s.getBool("canCreate") ?? false
+      canCreate: true
   );
 
   void toShared(SharedPreferences s) {

@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/analytics/v3.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
@@ -8,6 +11,8 @@ import 'package:googleapis/storage/v1.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+
+import 'Colors.dart';
 
 Future<File?> selectImage({ImageSource source = ImageSource.camera, int quality = 80}) async {
   final f = await ImagePicker().getImage(
@@ -20,13 +25,13 @@ Future<File?> selectImage({ImageSource source = ImageSource.camera, int quality 
   return File(f.path);
 }
 
-Future<File?> saveFileInTmpDir(File file, String fileName) async {
+Future<File?> saveFileInTmpDir(Uint8List file, String fileName) async {
   try {
     Directory appDir = await getApplicationDocumentsDirectory();
     var newFile = File("${appDir.path}/$fileName");
 
     await newFile.create(recursive: true);
-    newFile = await newFile.writeAsBytes(await file.readAsBytes());
+    newFile = await newFile.writeAsBytes(file);
 
     // TODO comperss
     // print("pre compress ${file.lengthSync()}");
@@ -65,6 +70,13 @@ Future<void> uploadFileToDrive(File file, String user, String place, DateTime au
       uploadMedia: Media(file.openRead(), file.lengthSync())
   );
   print(result.toJson());
+  Fluttertoast.showToast(
+      msg: "upload_success".tr(),
+      backgroundColor: blueDark,
+      textColor: Colors.white,
+      fontSize: 16,
+      gravity: ToastGravity.CENTER
+  );
 }
 
 class GoogleAuthClient extends http.BaseClient {
